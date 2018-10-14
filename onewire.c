@@ -2,6 +2,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include <util/atomic.h>
 
 
 #define OW_PIN (1<<PD1)
@@ -16,53 +17,60 @@
 BOOL ow_reset(void) //Resets 1wire bus
 {
 	BOOL presence = TRUE;
-	OW_LOW;
-	OW_OUT;
-	_delay_us(480);
-	OW_IN;
-	_delay_us(70);
-	presence = (OW_READ & OW_PIN);
-	_delay_us(410);
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
+	{
+		OW_LOW;
+		OW_OUT;
+		_delay_us(480);
+		OW_IN;
+		_delay_us(70);
+		presence = (OW_READ & OW_PIN);
+		_delay_us(410);
+	}
 	return presence;
 }
 
 void ow_write_byte(uint8_t value) //Writes byte to 1wire device
 {
 	uint8_t i;
-	for(i = 0; i < 8; i++)
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
 	{
-		OW_OUT;
-		if(value & 0x01)
+		for(i = 0; i < 8; i++)
 		{
-			_delay_us(6);
-			OW_IN;
-			_delay_us(64);
+			OW_OUT;
+			if(value & 0x01)
+			{
+				_delay_us(6);
+				OW_IN;
+				_delay_us(64);
+			}
+			else
+			{
+				_delay_us(60);
+				OW_IN;
+				_delay_us(10);
+			}
+			value >>= 1;
 		}
-		else
-		{
-			_delay_us(60);
-			OW_IN;
-			_delay_us(10);
-		}
-		value >>= 1;
 	}
 }
 
 uint8_t ow_read_byte(void) //Reads byte from 1wire device
 {
 	uint8_t i, value = 0;
-	for(i = 0; i < 8; i++)
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
 	{
-		value >>= 1;
-		OW_OUT;
-		_delay_us(6);
-		OW_IN;
-		_delay_us(9);
-		if(OW_READ & OW_PIN)
+		for(i = 0; i < 8; i++)
 		{
-			value |= 0x80;
+			value >>= 1;
+			OW_OUT;
+			_delay_us(6);
+			OW_IN;
+			_delay_us(9);
+			if(OW_READ & OW_PIN)
+				value |= 0x80;
+			_delay_us(55);
 		}
-		_delay_us(55);
 	}
 	return value;
 }

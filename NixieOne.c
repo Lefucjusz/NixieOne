@@ -10,8 +10,8 @@
 #include "ds18b20.h"
 #include "buttons.h"
 #include "photoresistor.h"
-//TODO - add CRC to DS18b20 (or some other error checking)
-//#define DEBUG
+
+#define DEBUG
 
 #define NULL ((void*)0)
 
