@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "bool.h"
 
-#define BOOSTER_CHECK_RATE 40 //*2ms
+#define BOOSTER_CHECK_RATE 20 //*2ms
 #define BOOSTER_FAIL TRUE
 #define BOOSTER_OK FALSE
 

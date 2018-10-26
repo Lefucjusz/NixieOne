@@ -2,7 +2,7 @@
 
 #include <avr/io.h>
 
-#define PHOTORESISTOR_PIN (1<<PC1)
+#define PHOTORESISTOR_PIN (1<<PC0)
 #define PHOTORESISTOR_DDR DDRC
 
 void photoresistor_init(void) //Initializes ADC for ambient light measurements
@@ -14,7 +14,7 @@ void photoresistor_init(void) //Initializes ADC for ambient light measurements
 
 uint8_t photoresistor_get_value(void) //Performs measurement and returns measured value
 {
-	ADMUX = (ADMUX & ~((1<<MUX3) | (1<<MUX2) | (1<<MUX1))) | (1<<MUX0); //Set ADC input to 1
+	ADMUX &= ~((1<<MUX3) | (1<<MUX2) | (1<<MUX1) | (1<<MUX0)); //Set ADC multiplexer to input 0
 	ADCSRA |= (1<<ADSC); //Start measurement
 	while(ADCSRA & (1<<ADSC)); //Wait for it to end
 	return ADCH; //Return read value

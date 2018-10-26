@@ -7,9 +7,9 @@
 #define BUTTON_PORT PORTB
 #define BUTTON_DDR DDRB
 
-#define HR_DAY_BUTTON (1<<PB2)
+#define HR_DAY_BUTTON (1<<PB0)
 #define MIN_MONTH_BUTTON  (1<<PB1)
-#define MODE_BUTTON  (1<<PB0)
+#define MODE_BUTTON  (1<<PB2)
 
 extern volatile uint16_t button_timer; //Program timer used to create delays, declaration in buttons.c
 

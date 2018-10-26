@@ -11,18 +11,16 @@
 #include "buttons.h"
 #include "photoresistor.h"
 
-#define DEBUG
-
 #define NULL ((void*)0)
 
 #define INT_PIN (1<<PD2)
 #define INT_DDR DDRD
 #define INT_PORT PORTD
 
-#define L_BRIGHTNESS_V 210
-#define M_BRIGHTNESS_V 190
-#define S_BRIGHTNESS_V 170
-#define XS_BRIGHTNESS_V 150
+#define L_BRIGHTNESS_V 220
+#define M_BRIGHTNESS_V 200
+#define S_BRIGHTNESS_V 180
+#define XS_BRIGHTNESS_V 160
 
 #define TCNT0_LOAD_VALUE 131
 
@@ -110,13 +108,13 @@ void display_content_update(uint8_t content_type)
 			display_content.digit_4 = NIXIE_OFF;
 		break;
 		case CONTENT_DEPOISON:
-			display_content.digit_1 = digit_counter;
-			display_content.digit_2 = digit_counter;
-			display_content.digit_3 = digit_counter;
-			display_content.digit_4 = digit_counter;
-			digit_counter++;
-			if(digit_counter > 9)
-				digit_counter = 0;
+				display_content.digit_1 = digit_counter;
+				display_content.digit_2 = digit_counter;
+				display_content.digit_3 = digit_counter;
+				display_content.digit_4 = digit_counter;
+				digit_counter++;
+				if(digit_counter > 9)
+					digit_counter = 0;
 		break;
 		case CONTENT_ERROR:
 			display_content.digit_1 = 8;
@@ -319,11 +317,7 @@ void main(void)
 	BOOL booster_error;
 	BOOL display_on = FALSE;
 	button_t hr_day_button, min_month_button, mode_button;
-
-	#ifndef DEBUG
 	wdt_enable(WDTO_250MS); //enable watchdog for 250ms
-	#endif
-
 	booster_start();
 	nixie_init();
 	photoresistor_init();
@@ -339,18 +333,14 @@ void main(void)
 	{
 		if(check_booster)
 		{
-			#ifndef DEBUG
 			wdt_reset(); //normally this should be called every 80ms, if it wasn't for 250ms - CPU has halted and watchdog will restart it
-			#endif
 			check_booster = FALSE;
 			ambient_light = photoresistor_get_value();
 			desired_voltage = ambientlight2voltage(ambient_light);
 			booster_error = booster_control(desired_voltage);
 			if(booster_error)
 			{
-				#ifndef DEBUG
 				wdt_disable();
-				#endif
 				timer_stop();
 			}
 		}

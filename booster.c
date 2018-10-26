@@ -5,7 +5,7 @@
 #define MOSFET_PIN (1<<PB3)
 #define MOSFET_PORT PORTB
 #define MOSFET_DDR DDRB
-#define FEEDBACK_PIN (1<<PC0)
+#define FEEDBACK_PIN (1<<PC1)
 #define FEEDBACK_PORT PORTC
 #define FEEDBACK_DDR DDRC
 
@@ -18,7 +18,7 @@ void booster_start(void) //Starts booster at low power
 	MOSFET_PORT |= MOSFET_PIN; //Turn off MOSFET (inverted because of inverting driver)
 	TCCR2 |= (1<<WGM21) | (1<<WGM20) | (1<<COM21) | (1<<COM20) | (1<<CS20);
 	//Timer 2, Fast PWM, Set OC2 on compare (because of inverting driver), no prescaler -> 15.625kHz PWM
-	OCR2 = 30; //Start at some low value
+	OCR2 = 40; //Start at some low value
 
 	//ADC
 	FEEDBACK_DDR &= ~FEEDBACK_PIN; //Feedback pin as input
@@ -32,7 +32,7 @@ void booster_stop(void) //Stops booster
 }
 uint16_t booster_get_voltage(void) //Measures and returns output booster voltage
 {
-	ADMUX &= ~((1<<MUX3) | (1<<MUX2) | (1<<MUX1) | (1<<MUX0)); //Set ADC multiplexer to input 0
+	ADMUX = (ADMUX & ~((1<<MUX3) | (1<<MUX2) | (1<<MUX1))) | (1<<MUX0); //Set ADC multiplexer input to 1
 	ADCSRA |= (1<<ADSC); //Start measurement
 	while(ADCSRA & (1<<ADSC)); //Wait for it to end
 	//Equation for calculating voltage, simplified so that it doesn't use floats or create big values
