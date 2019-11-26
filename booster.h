@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include "bool.h"
 
-#define BOOSTER_CHECK_RATE 20 //*2ms
+//#define BOOSTER_CHECK_RATE 20 //*2ms (for relay+integrator)
+#define BOOSTER_CHECK_RATE 2 //*2ms (for PI)
 #define BOOSTER_FAIL TRUE
 #define BOOSTER_OK FALSE
 

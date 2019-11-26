@@ -1,0 +1,2579 @@
+
+NixieOne.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000de0  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000000c  00800060  00000de0  00000e74  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .bss          00000020  0080006c  0080006c  00000e80  2**0
+                  ALLOC
+  3 .stab         000028c8  00000000  00000000  00000e80  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  4 .stabstr      000010b1  00000000  00000000  00003748  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	12 c0       	rjmp	.+36     	; 0x26 <__ctors_end>
+   2:	38 c1       	rjmp	.+624    	; 0x274 <__vector_1>
+   4:	2b c0       	rjmp	.+86     	; 0x5c <__bad_interrupt>
+   6:	2a c0       	rjmp	.+84     	; 0x5c <__bad_interrupt>
+   8:	29 c0       	rjmp	.+82     	; 0x5c <__bad_interrupt>
+   a:	28 c0       	rjmp	.+80     	; 0x5c <__bad_interrupt>
+   c:	27 c0       	rjmp	.+78     	; 0x5c <__bad_interrupt>
+   e:	26 c0       	rjmp	.+76     	; 0x5c <__bad_interrupt>
+  10:	25 c0       	rjmp	.+74     	; 0x5c <__bad_interrupt>
+  12:	a3 c3       	rjmp	.+1862   	; 0x75a <__vector_9>
+  14:	23 c0       	rjmp	.+70     	; 0x5c <__bad_interrupt>
+  16:	22 c0       	rjmp	.+68     	; 0x5c <__bad_interrupt>
+  18:	21 c0       	rjmp	.+66     	; 0x5c <__bad_interrupt>
+  1a:	20 c0       	rjmp	.+64     	; 0x5c <__bad_interrupt>
+  1c:	1f c0       	rjmp	.+62     	; 0x5c <__bad_interrupt>
+  1e:	1e c0       	rjmp	.+60     	; 0x5c <__bad_interrupt>
+  20:	1d c0       	rjmp	.+58     	; 0x5c <__bad_interrupt>
+  22:	1c c0       	rjmp	.+56     	; 0x5c <__bad_interrupt>
+  24:	1b c0       	rjmp	.+54     	; 0x5c <__bad_interrupt>
+
+00000026 <__ctors_end>:
+  26:	11 24       	eor	r1, r1
+  28:	1f be       	out	0x3f, r1	; 63
+  2a:	cf e5       	ldi	r28, 0x5F	; 95
+  2c:	d4 e0       	ldi	r29, 0x04	; 4
+  2e:	de bf       	out	0x3e, r29	; 62
+  30:	cd bf       	out	0x3d, r28	; 61
+
+00000032 <__do_copy_data>:
+  32:	10 e0       	ldi	r17, 0x00	; 0
+  34:	a0 e6       	ldi	r26, 0x60	; 96
+  36:	b0 e0       	ldi	r27, 0x00	; 0
+  38:	e0 ee       	ldi	r30, 0xE0	; 224
+  3a:	fd e0       	ldi	r31, 0x0D	; 13
+  3c:	02 c0       	rjmp	.+4      	; 0x42 <.do_copy_data_start>
+
+0000003e <.do_copy_data_loop>:
+  3e:	05 90       	lpm	r0, Z+
+  40:	0d 92       	st	X+, r0
+
+00000042 <.do_copy_data_start>:
+  42:	ac 36       	cpi	r26, 0x6C	; 108
+  44:	b1 07       	cpc	r27, r17
+  46:	d9 f7       	brne	.-10     	; 0x3e <.do_copy_data_loop>
+
+00000048 <__do_clear_bss>:
+  48:	10 e0       	ldi	r17, 0x00	; 0
+  4a:	ac e6       	ldi	r26, 0x6C	; 108
+  4c:	b0 e0       	ldi	r27, 0x00	; 0
+  4e:	01 c0       	rjmp	.+2      	; 0x52 <.do_clear_bss_start>
+
+00000050 <.do_clear_bss_loop>:
+  50:	1d 92       	st	X+, r1
+
+00000052 <.do_clear_bss_start>:
+  52:	ac 38       	cpi	r26, 0x8C	; 140
+  54:	b1 07       	cpc	r27, r17
+  56:	e1 f7       	brne	.-8      	; 0x50 <.do_clear_bss_loop>
+  58:	4f d2       	rcall	.+1182   	; 0x4f8 <main>
+  5a:	c0 c6       	rjmp	.+3456   	; 0xddc <_exit>
+
+0000005c <__bad_interrupt>:
+  5c:	d1 cf       	rjmp	.-94     	; 0x0 <__vectors>
+
+0000005e <display_content_init>:
+
+const uint8_t mths[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+void display_content_init(void)
+{
+	display_content.decimal_point_1 = FALSE;
+  5e:	10 92 79 00 	sts	0x0079, r1
+	display_content.decimal_point_2 = TRUE;
+  62:	81 e0       	ldi	r24, 0x01	; 1
+  64:	80 93 7b 00 	sts	0x007B, r24
+	display_content.decimal_point_3 = FALSE;
+  68:	10 92 7d 00 	sts	0x007D, r1
+	display_content.decimal_point_4 = FALSE;
+  6c:	10 92 7f 00 	sts	0x007F, r1
+	display_content.digit_1 = time.hr/10;
+  70:	20 91 82 00 	lds	r18, 0x0082
+  74:	82 2f       	mov	r24, r18
+  76:	6a e0       	ldi	r22, 0x0A	; 10
+  78:	7e d6       	rcall	.+3324   	; 0xd76 <__udivmodqi4>
+  7a:	80 93 78 00 	sts	0x0078, r24
+	display_content.digit_2 = time.hr%10;
+  7e:	82 2f       	mov	r24, r18
+  80:	7a d6       	rcall	.+3316   	; 0xd76 <__udivmodqi4>
+  82:	90 93 7a 00 	sts	0x007A, r25
+	display_content.digit_3 = time.min/10;
+  86:	20 91 83 00 	lds	r18, 0x0083
+  8a:	82 2f       	mov	r24, r18
+  8c:	74 d6       	rcall	.+3304   	; 0xd76 <__udivmodqi4>
+  8e:	80 93 7c 00 	sts	0x007C, r24
+	display_content.digit_4 = time.min%10;
+  92:	82 2f       	mov	r24, r18
+  94:	70 d6       	rcall	.+3296   	; 0xd76 <__udivmodqi4>
+  96:	90 93 7e 00 	sts	0x007E, r25
+}
+  9a:	08 95       	ret
+
+0000009c <display_content_update>:
+void display_content_update(uint8_t content_type)
+{
+	static uint8_t digit_counter = 0;
+	switch(content_type)
+  9c:	82 30       	cpi	r24, 0x02	; 2
+  9e:	a9 f1       	breq	.+106    	; 0x10a <display_content_update+0x6e>
+  a0:	83 30       	cpi	r24, 0x03	; 3
+  a2:	30 f4       	brcc	.+12     	; 0xb0 <display_content_update+0x14>
+  a4:	88 23       	and	r24, r24
+  a6:	69 f0       	breq	.+26     	; 0xc2 <display_content_update+0x26>
+  a8:	81 30       	cpi	r24, 0x01	; 1
+  aa:	09 f0       	breq	.+2      	; 0xae <display_content_update+0x12>
+  ac:	78 c0       	rjmp	.+240    	; 0x19e <display_content_update+0x102>
+  ae:	17 c0       	rjmp	.+46     	; 0xde <display_content_update+0x42>
+  b0:	84 30       	cpi	r24, 0x04	; 4
+  b2:	09 f4       	brne	.+2      	; 0xb6 <display_content_update+0x1a>
+  b4:	50 c0       	rjmp	.+160    	; 0x156 <display_content_update+0xba>
+  b6:	84 30       	cpi	r24, 0x04	; 4
+  b8:	e0 f1       	brcs	.+120    	; 0x132 <display_content_update+0x96>
+  ba:	85 30       	cpi	r24, 0x05	; 5
+  bc:	09 f0       	breq	.+2      	; 0xc0 <display_content_update+0x24>
+  be:	6f c0       	rjmp	.+222    	; 0x19e <display_content_update+0x102>
+  c0:	5d c0       	rjmp	.+186    	; 0x17c <display_content_update+0xe0>
+	{
+		case CONTENT_HOUR:
+			display_content.digit_1 = time.hr/10;
+  c2:	20 91 82 00 	lds	r18, 0x0082
+  c6:	82 2f       	mov	r24, r18
+  c8:	6a e0       	ldi	r22, 0x0A	; 10
+  ca:	55 d6       	rcall	.+3242   	; 0xd76 <__udivmodqi4>
+  cc:	80 93 78 00 	sts	0x0078, r24
+			display_content.digit_2 = time.hr%10;
+  d0:	82 2f       	mov	r24, r18
+  d2:	51 d6       	rcall	.+3234   	; 0xd76 <__udivmodqi4>
+  d4:	90 93 7a 00 	sts	0x007A, r25
+			display_content.digit_3 = time.min/10;
+  d8:	20 91 83 00 	lds	r18, 0x0083
+  dc:	0d c0       	rjmp	.+26     	; 0xf8 <display_content_update+0x5c>
+			display_content.digit_4 = time.min%10;
+		break;
+		case CONTENT_DATE:
+			display_content.digit_1 = time.day/10;
+  de:	20 91 86 00 	lds	r18, 0x0086
+  e2:	82 2f       	mov	r24, r18
+  e4:	6a e0       	ldi	r22, 0x0A	; 10
+  e6:	47 d6       	rcall	.+3214   	; 0xd76 <__udivmodqi4>
+  e8:	80 93 78 00 	sts	0x0078, r24
+			display_content.digit_2 = time.day%10;
+  ec:	82 2f       	mov	r24, r18
+  ee:	43 d6       	rcall	.+3206   	; 0xd76 <__udivmodqi4>
+  f0:	90 93 7a 00 	sts	0x007A, r25
+			display_content.digit_3 = time.mth/10;
+  f4:	20 91 87 00 	lds	r18, 0x0087
+  f8:	82 2f       	mov	r24, r18
+  fa:	3d d6       	rcall	.+3194   	; 0xd76 <__udivmodqi4>
+  fc:	80 93 7c 00 	sts	0x007C, r24
+			display_content.digit_4 = time.mth%10;
+ 100:	82 2f       	mov	r24, r18
+ 102:	39 d6       	rcall	.+3186   	; 0xd76 <__udivmodqi4>
+ 104:	90 93 7e 00 	sts	0x007E, r25
+ 108:	08 95       	ret
+		break;
+		case CONTENT_TEMP:
+			display_content.digit_1 = temperature.integer/10;
+ 10a:	20 91 80 00 	lds	r18, 0x0080
+ 10e:	82 2f       	mov	r24, r18
+ 110:	6a e0       	ldi	r22, 0x0A	; 10
+ 112:	31 d6       	rcall	.+3170   	; 0xd76 <__udivmodqi4>
+ 114:	80 93 78 00 	sts	0x0078, r24
+			display_content.digit_2 = temperature.integer%10;
+ 118:	82 2f       	mov	r24, r18
+ 11a:	2d d6       	rcall	.+3162   	; 0xd76 <__udivmodqi4>
+ 11c:	90 93 7a 00 	sts	0x007A, r25
+			display_content.digit_3 = temperature.fraction/10;
+ 120:	80 91 81 00 	lds	r24, 0x0081
+ 124:	28 d6       	rcall	.+3152   	; 0xd76 <__udivmodqi4>
+ 126:	80 93 7c 00 	sts	0x007C, r24
+			display_content.digit_4 = NIXIE_OFF;
+ 12a:	8a e0       	ldi	r24, 0x0A	; 10
+ 12c:	80 93 7e 00 	sts	0x007E, r24
+ 130:	08 95       	ret
+		break;
+		case CONTENT_DEPOISON:
+				display_content.digit_1 = digit_counter;
+ 132:	80 91 74 00 	lds	r24, 0x0074
+ 136:	80 93 78 00 	sts	0x0078, r24
+				display_content.digit_2 = digit_counter;
+ 13a:	80 93 7a 00 	sts	0x007A, r24
+				display_content.digit_3 = digit_counter;
+ 13e:	80 93 7c 00 	sts	0x007C, r24
+				display_content.digit_4 = digit_counter;
+ 142:	80 93 7e 00 	sts	0x007E, r24
+				digit_counter++;
+ 146:	8f 5f       	subi	r24, 0xFF	; 255
+ 148:	80 93 74 00 	sts	0x0074, r24
+				if(digit_counter > 9)
+ 14c:	8a 30       	cpi	r24, 0x0A	; 10
+ 14e:	38 f1       	brcs	.+78     	; 0x19e <display_content_update+0x102>
+					digit_counter = 0;
+ 150:	10 92 74 00 	sts	0x0074, r1
+ 154:	08 95       	ret
+		break;
+		case CONTENT_ERROR:
+			display_content.digit_1 = 8;
+ 156:	88 e0       	ldi	r24, 0x08	; 8
+ 158:	80 93 78 00 	sts	0x0078, r24
+		    display_content.digit_2 = 8;
+ 15c:	80 93 7a 00 	sts	0x007A, r24
+			display_content.digit_3 = 8;
+ 160:	80 93 7c 00 	sts	0x007C, r24
+			display_content.digit_4 = 8;
+ 164:	80 93 7e 00 	sts	0x007E, r24
+			display_content.decimal_point_1 = TRUE;
+ 168:	81 e0       	ldi	r24, 0x01	; 1
+ 16a:	80 93 79 00 	sts	0x0079, r24
+			display_content.decimal_point_2 = TRUE;
+ 16e:	80 93 7b 00 	sts	0x007B, r24
+			display_content.decimal_point_3 = TRUE;
+ 172:	80 93 7d 00 	sts	0x007D, r24
+			display_content.decimal_point_4 = TRUE;
+ 176:	80 93 7f 00 	sts	0x007F, r24
+ 17a:	08 95       	ret
+		break;
+		case CONTENT_CLEAR:
+			display_content.digit_1 = NIXIE_OFF;
+ 17c:	8a e0       	ldi	r24, 0x0A	; 10
+ 17e:	80 93 78 00 	sts	0x0078, r24
+			display_content.digit_2 = NIXIE_OFF;
+ 182:	80 93 7a 00 	sts	0x007A, r24
+			display_content.digit_3 = NIXIE_OFF;
+ 186:	80 93 7c 00 	sts	0x007C, r24
+			display_content.digit_4 = NIXIE_OFF;
+ 18a:	80 93 7e 00 	sts	0x007E, r24
+			display_content.decimal_point_1 = FALSE;
+ 18e:	10 92 79 00 	sts	0x0079, r1
+			display_content.decimal_point_2 = FALSE;
+ 192:	10 92 7b 00 	sts	0x007B, r1
+			display_content.decimal_point_3 = FALSE;
+ 196:	10 92 7d 00 	sts	0x007D, r1
+			display_content.decimal_point_4 = FALSE;
+ 19a:	10 92 7f 00 	sts	0x007F, r1
+ 19e:	08 95       	ret
+
+000001a0 <timer_start>:
+	}
+}
+
+void timer_start(void)
+{
+	TCNT0 = TCNT0_LOAD_VALUE;
+ 1a0:	83 e8       	ldi	r24, 0x83	; 131
+ 1a2:	82 bf       	out	0x32, r24	; 50
+	TCCR0 = (1<<CS01) | (1<<CS00);
+ 1a4:	83 e0       	ldi	r24, 0x03	; 3
+ 1a6:	83 bf       	out	0x33, r24	; 51
+	TIMSK |= (1<<TOIE0);
+ 1a8:	89 b7       	in	r24, 0x39	; 57
+ 1aa:	81 60       	ori	r24, 0x01	; 1
+ 1ac:	89 bf       	out	0x39, r24	; 57
+}
+ 1ae:	08 95       	ret
+
+000001b0 <timer_stop>:
+void timer_stop(void)
+{
+	TCCR0 = 0;
+ 1b0:	13 be       	out	0x33, r1	; 51
+}
+ 1b2:	08 95       	ret
+
+000001b4 <rtc_interrupt_init>:
+
+void rtc_interrupt_init(void)
+{
+	INT_DDR &= ~INT_PIN; //Interrupt pin as input
+ 1b4:	8a 98       	cbi	0x11, 2	; 17
+	INT_PORT |= INT_PIN; //Turn on internal pullup
+ 1b6:	92 9a       	sbi	0x12, 2	; 18
+	MCUCR |= (1<<ISC00); //Both edges because of the colon purpose - only rising or falling would be sufficient otherwise
+ 1b8:	85 b7       	in	r24, 0x35	; 53
+ 1ba:	81 60       	ori	r24, 0x01	; 1
+ 1bc:	85 bf       	out	0x35, r24	; 53
+	GICR |= (1<<INT0); //Enable INT0 interrupt
+ 1be:	8b b7       	in	r24, 0x3b	; 59
+ 1c0:	80 64       	ori	r24, 0x40	; 64
+ 1c2:	8b bf       	out	0x3b, r24	; 59
+}
+ 1c4:	08 95       	ret
+
+000001c6 <ambientlight2voltage>:
+		return FALSE; //Report success
+	}
+}
+
+uint8_t ambientlight2voltage(uint8_t light)
+{
+ 1c6:	98 2f       	mov	r25, r24
+	if(light >= 120)
+ 1c8:	88 37       	cpi	r24, 0x78	; 120
+ 1ca:	10 f0       	brcs	.+4      	; 0x1d0 <ambientlight2voltage+0xa>
+ 1cc:	8c ed       	ldi	r24, 0xDC	; 220
+ 1ce:	08 95       	ret
+		return L_BRIGHTNESS_V;
+	if(light < 120 && light >= 60)
+ 1d0:	8c 53       	subi	r24, 0x3C	; 60
+ 1d2:	8c 33       	cpi	r24, 0x3C	; 60
+ 1d4:	10 f4       	brcc	.+4      	; 0x1da <ambientlight2voltage+0x14>
+ 1d6:	88 ec       	ldi	r24, 0xC8	; 200
+ 1d8:	08 95       	ret
+		return M_BRIGHTNESS_V;
+	if(light < 60 && light >= 20)
+ 1da:	94 51       	subi	r25, 0x14	; 20
+ 1dc:	98 32       	cpi	r25, 0x28	; 40
+ 1de:	10 f0       	brcs	.+4      	; 0x1e4 <ambientlight2voltage+0x1e>
+ 1e0:	80 ea       	ldi	r24, 0xA0	; 160
+ 1e2:	08 95       	ret
+ 1e4:	84 eb       	ldi	r24, 0xB4	; 180
+		return S_BRIGHTNESS_V;
+	return XS_BRIGHTNESS_V;
+}
+ 1e6:	08 95       	ret
+
+000001e8 <buttons_assign>:
+	ds1307_write_reg(selected_mode, DS1307_MODE_REG);
+	auxiliary_timer = MODE_CHANGE_EXIT_DELAY;
+}
+
+void buttons_assign(button_t* hr_day, button_t* min_month, button_t* mode)
+{
+ 1e8:	0f 93       	push	r16
+ 1ea:	1f 93       	push	r17
+ 1ec:	fc 01       	movw	r30, r24
+ 1ee:	db 01       	movw	r26, r22
+ 1f0:	9a 01       	movw	r18, r20
+	hr_day->button_pin = &BUTTON_READ;
+ 1f2:	66 e3       	ldi	r22, 0x36	; 54
+ 1f4:	70 e0       	ldi	r23, 0x00	; 0
+ 1f6:	71 83       	std	Z+1, r23	; 0x01
+ 1f8:	60 83       	st	Z, r22
+	hr_day->button_mask = HR_DAY_BUTTON;
+ 1fa:	81 e0       	ldi	r24, 0x01	; 1
+ 1fc:	82 83       	std	Z+2, r24	; 0x02
+	hr_day->click_func = hr_day_increment;
+ 1fe:	89 ec       	ldi	r24, 0xC9	; 201
+ 200:	91 e0       	ldi	r25, 0x01	; 1
+ 202:	90 87       	std	Z+8, r25	; 0x08
+ 204:	87 83       	std	Z+7, r24	; 0x07
+	hr_day->hold_func = hr_day_increment;
+ 206:	92 87       	std	Z+10, r25	; 0x0a
+ 208:	81 87       	std	Z+9, r24	; 0x09
+	hr_day->repeat_delay_ms = 200;
+ 20a:	08 ec       	ldi	r16, 0xC8	; 200
+ 20c:	10 e0       	ldi	r17, 0x00	; 0
+ 20e:	14 83       	std	Z+4, r17	; 0x04
+ 210:	03 83       	std	Z+3, r16	; 0x03
+	hr_day->hold_delay_ms = 1000;
+ 212:	48 ee       	ldi	r20, 0xE8	; 232
+ 214:	53 e0       	ldi	r21, 0x03	; 3
+ 216:	56 83       	std	Z+6, r21	; 0x06
+ 218:	45 83       	std	Z+5, r20	; 0x05
+	min_month->button_pin = &BUTTON_READ;
+ 21a:	11 96       	adiw	r26, 0x01	; 1
+ 21c:	7c 93       	st	X, r23
+ 21e:	6e 93       	st	-X, r22
+	min_month->button_mask = MIN_MONTH_BUTTON;
+ 220:	82 e0       	ldi	r24, 0x02	; 2
+ 222:	12 96       	adiw	r26, 0x02	; 2
+ 224:	8c 93       	st	X, r24
+ 226:	12 97       	sbiw	r26, 0x02	; 2
+	min_month->click_func = min_month_increment;
+ 228:	8f e6       	ldi	r24, 0x6F	; 111
+ 22a:	91 e0       	ldi	r25, 0x01	; 1
+ 22c:	18 96       	adiw	r26, 0x08	; 8
+ 22e:	9c 93       	st	X, r25
+ 230:	8e 93       	st	-X, r24
+ 232:	17 97       	sbiw	r26, 0x07	; 7
+	min_month->hold_func = min_month_increment;
+ 234:	1a 96       	adiw	r26, 0x0a	; 10
+ 236:	9c 93       	st	X, r25
+ 238:	8e 93       	st	-X, r24
+ 23a:	19 97       	sbiw	r26, 0x09	; 9
+	min_month->repeat_delay_ms = 200;
+ 23c:	14 96       	adiw	r26, 0x04	; 4
+ 23e:	1c 93       	st	X, r17
+ 240:	0e 93       	st	-X, r16
+ 242:	13 97       	sbiw	r26, 0x03	; 3
+	min_month->hold_delay_ms = 1000;
+ 244:	16 96       	adiw	r26, 0x06	; 6
+ 246:	5c 93       	st	X, r21
+ 248:	4e 93       	st	-X, r20
+ 24a:	15 97       	sbiw	r26, 0x05	; 5
+	mode->button_pin = &BUTTON_READ;
+ 24c:	f9 01       	movw	r30, r18
+ 24e:	71 83       	std	Z+1, r23	; 0x01
+ 250:	60 83       	st	Z, r22
+	mode->button_mask = MODE_BUTTON;
+ 252:	84 e0       	ldi	r24, 0x04	; 4
+ 254:	82 83       	std	Z+2, r24	; 0x02
+	mode->click_func = NULL;
+ 256:	10 86       	std	Z+8, r1	; 0x08
+ 258:	17 82       	std	Z+7, r1	; 0x07
+	mode->hold_func = mode_change;
+ 25a:	89 e4       	ldi	r24, 0x49	; 73
+ 25c:	91 e0       	ldi	r25, 0x01	; 1
+ 25e:	92 87       	std	Z+10, r25	; 0x0a
+ 260:	81 87       	std	Z+9, r24	; 0x09
+	mode->repeat_delay_ms = 500;
+ 262:	84 ef       	ldi	r24, 0xF4	; 244
+ 264:	91 e0       	ldi	r25, 0x01	; 1
+ 266:	94 83       	std	Z+4, r25	; 0x04
+ 268:	83 83       	std	Z+3, r24	; 0x03
+	mode->hold_delay_ms = 1000;
+ 26a:	56 83       	std	Z+6, r21	; 0x06
+ 26c:	45 83       	std	Z+5, r20	; 0x05
+}
+ 26e:	1f 91       	pop	r17
+ 270:	0f 91       	pop	r16
+ 272:	08 95       	ret
+
+00000274 <__vector_1>:
+		auxiliary_timer--;
+	TCNT0 = TCNT0_LOAD_VALUE;
+}
+
+ISR(INT0_vect) //interrupt from DS1307, should be called two times per second
+{
+ 274:	1f 92       	push	r1
+ 276:	0f 92       	push	r0
+ 278:	0f b6       	in	r0, 0x3f	; 63
+ 27a:	0f 92       	push	r0
+ 27c:	11 24       	eor	r1, r1
+ 27e:	8f 93       	push	r24
+	update_time = TRUE;
+ 280:	81 e0       	ldi	r24, 0x01	; 1
+ 282:	80 93 72 00 	sts	0x0072, r24
+}
+ 286:	8f 91       	pop	r24
+ 288:	0f 90       	pop	r0
+ 28a:	0f be       	out	0x3f, r0	; 63
+ 28c:	0f 90       	pop	r0
+ 28e:	1f 90       	pop	r1
+ 290:	18 95       	reti
+
+00000292 <mode_change>:
+	}
+	ds1307_set_date(time);
+}
+void mode_change(void)
+{
+	if(rtc_inconsistence)
+ 292:	80 91 70 00 	lds	r24, 0x0070
+ 296:	88 23       	and	r24, r24
+ 298:	09 f5       	brne	.+66     	; 0x2dc <mode_change+0x4a>
+		return;
+	content_timer = 0;
+ 29a:	10 92 6f 00 	sts	0x006F, r1
+	selected_mode++;
+ 29e:	80 91 77 00 	lds	r24, 0x0077
+ 2a2:	8f 5f       	subi	r24, 0xFF	; 255
+ 2a4:	80 93 77 00 	sts	0x0077, r24
+	if(selected_mode > MODE_HOUR)
+ 2a8:	85 30       	cpi	r24, 0x05	; 5
+ 2aa:	18 f0       	brcs	.+6      	; 0x2b2 <mode_change+0x20>
+		selected_mode = MODE_HOUR_DATE_TEMP;
+ 2ac:	81 e0       	ldi	r24, 0x01	; 1
+ 2ae:	80 93 77 00 	sts	0x0077, r24
+	display_content.decimal_point_2 = FALSE;
+ 2b2:	10 92 7b 00 	sts	0x007B, r1
+	display_content.digit_1 = NIXIE_OFF;
+ 2b6:	8a e0       	ldi	r24, 0x0A	; 10
+ 2b8:	80 93 78 00 	sts	0x0078, r24
+	display_content.digit_2 = NIXIE_OFF;
+ 2bc:	80 93 7a 00 	sts	0x007A, r24
+	display_content.digit_3 = NIXIE_OFF;
+ 2c0:	80 93 7c 00 	sts	0x007C, r24
+	display_content.digit_4 = selected_mode;
+ 2c4:	80 91 77 00 	lds	r24, 0x0077
+ 2c8:	80 93 7e 00 	sts	0x007E, r24
+	ds1307_write_reg(selected_mode, DS1307_MODE_REG);
+ 2cc:	69 e0       	ldi	r22, 0x09	; 9
+ 2ce:	3c d4       	rcall	.+2168   	; 0xb48 <ds1307_write_reg>
+	auxiliary_timer = MODE_CHANGE_EXIT_DELAY;
+ 2d0:	8c ed       	ldi	r24, 0xDC	; 220
+ 2d2:	95 e0       	ldi	r25, 0x05	; 5
+ 2d4:	90 93 6e 00 	sts	0x006E, r25
+ 2d8:	80 93 6d 00 	sts	0x006D, r24
+ 2dc:	08 95       	ret
+
+000002de <min_month_increment>:
+	}
+	ds1307_set_date(time);
+}
+void min_month_increment(void)
+{
+	if(rtc_inconsistence)
+ 2de:	80 91 70 00 	lds	r24, 0x0070
+ 2e2:	88 23       	and	r24, r24
+ 2e4:	21 f0       	breq	.+8      	; 0x2ee <min_month_increment+0x10>
+	{
+			rtc_inconsistence = FALSE;
+ 2e6:	10 92 70 00 	sts	0x0070, r1
+			display_content_update(CONTENT_CLEAR);
+ 2ea:	85 e0       	ldi	r24, 0x05	; 5
+ 2ec:	d7 de       	rcall	.-594    	; 0x9c <display_content_update>
+	}
+	if(content_timer <= HOUR_DISPLAY_END)
+ 2ee:	80 91 6f 00 	lds	r24, 0x006F
+ 2f2:	86 31       	cpi	r24, 0x16	; 22
+ 2f4:	f8 f4       	brcc	.+62     	; 0x334 <min_month_increment+0x56>
+	{
+		content_timer = HOUR_DISPLAY_START;
+ 2f6:	10 92 6f 00 	sts	0x006F, r1
+		time.min++;
+ 2fa:	80 91 83 00 	lds	r24, 0x0083
+ 2fe:	8f 5f       	subi	r24, 0xFF	; 255
+ 300:	80 93 83 00 	sts	0x0083, r24
+		if(time.min > 59)
+ 304:	8c 33       	cpi	r24, 0x3C	; 60
+ 306:	10 f0       	brcs	.+4      	; 0x30c <min_month_increment+0x2e>
+			time.min = 0;
+ 308:	10 92 83 00 	sts	0x0083, r1
+		time.sec = 0;
+ 30c:	10 92 84 00 	sts	0x0084, r1
+		display_content_update(CONTENT_HOUR);
+ 310:	80 e0       	ldi	r24, 0x00	; 0
+ 312:	c4 de       	rcall	.-632    	; 0x9c <display_content_update>
+		ds1307_set_hour(time);
+ 314:	20 91 82 00 	lds	r18, 0x0082
+ 318:	30 91 83 00 	lds	r19, 0x0083
+ 31c:	40 91 84 00 	lds	r20, 0x0084
+ 320:	50 91 85 00 	lds	r21, 0x0085
+ 324:	60 91 86 00 	lds	r22, 0x0086
+ 328:	70 91 87 00 	lds	r23, 0x0087
+ 32c:	80 91 88 00 	lds	r24, 0x0088
+ 330:	d9 d3       	rcall	.+1970   	; 0xae4 <ds1307_set_hour>
+ 332:	1f c0       	rjmp	.+62     	; 0x372 <min_month_increment+0x94>
+	}
+	else if(content_timer >= DATE_DISPLAY_START && content_timer < DATE_DISPLAY_END)
+ 334:	86 51       	subi	r24, 0x16	; 22
+ 336:	89 30       	cpi	r24, 0x09	; 9
+ 338:	e0 f4       	brcc	.+56     	; 0x372 <min_month_increment+0x94>
+	{
+		content_timer = DATE_DISPLAY_START;
+ 33a:	86 e1       	ldi	r24, 0x16	; 22
+ 33c:	80 93 6f 00 	sts	0x006F, r24
+		time.mth++;
+ 340:	80 91 87 00 	lds	r24, 0x0087
+ 344:	8f 5f       	subi	r24, 0xFF	; 255
+ 346:	80 93 87 00 	sts	0x0087, r24
+		if(time.mth > 12)
+ 34a:	8d 30       	cpi	r24, 0x0D	; 13
+ 34c:	18 f0       	brcs	.+6      	; 0x354 <min_month_increment+0x76>
+			time.mth = 1;
+ 34e:	81 e0       	ldi	r24, 0x01	; 1
+ 350:	80 93 87 00 	sts	0x0087, r24
+		if(time.day > mths[time.mth - 1])
+ 354:	e0 91 87 00 	lds	r30, 0x0087
+ 358:	f0 e0       	ldi	r31, 0x00	; 0
+ 35a:	e1 5a       	subi	r30, 0xA1	; 161
+ 35c:	ff 4f       	sbci	r31, 0xFF	; 255
+ 35e:	90 91 86 00 	lds	r25, 0x0086
+ 362:	80 81       	ld	r24, Z
+ 364:	89 17       	cp	r24, r25
+ 366:	18 f4       	brcc	.+6      	; 0x36e <min_month_increment+0x90>
+			time.day = 1;
+ 368:	81 e0       	ldi	r24, 0x01	; 1
+ 36a:	80 93 86 00 	sts	0x0086, r24
+		display_content_update(CONTENT_DATE);
+ 36e:	81 e0       	ldi	r24, 0x01	; 1
+ 370:	95 de       	rcall	.-726    	; 0x9c <display_content_update>
+	}
+	ds1307_set_date(time);
+ 372:	20 91 82 00 	lds	r18, 0x0082
+ 376:	30 91 83 00 	lds	r19, 0x0083
+ 37a:	40 91 84 00 	lds	r20, 0x0084
+ 37e:	50 91 85 00 	lds	r21, 0x0085
+ 382:	60 91 86 00 	lds	r22, 0x0086
+ 386:	70 91 87 00 	lds	r23, 0x0087
+ 38a:	80 91 88 00 	lds	r24, 0x0088
+ 38e:	72 d3       	rcall	.+1764   	; 0xa74 <ds1307_set_date>
+}
+ 390:	08 95       	ret
+
+00000392 <hr_day_increment>:
+	return XS_BRIGHTNESS_V;
+}
+
+void hr_day_increment(void)
+{
+	if(rtc_inconsistence)
+ 392:	80 91 70 00 	lds	r24, 0x0070
+ 396:	88 23       	and	r24, r24
+ 398:	21 f0       	breq	.+8      	; 0x3a2 <hr_day_increment+0x10>
+	{
+		rtc_inconsistence = FALSE;
+ 39a:	10 92 70 00 	sts	0x0070, r1
+		display_content_update(CONTENT_CLEAR);
+ 39e:	85 e0       	ldi	r24, 0x05	; 5
+ 3a0:	7d de       	rcall	.-774    	; 0x9c <display_content_update>
+	}
+	if(content_timer <= HOUR_DISPLAY_END)
+ 3a2:	80 91 6f 00 	lds	r24, 0x006F
+ 3a6:	86 31       	cpi	r24, 0x16	; 22
+ 3a8:	f8 f4       	brcc	.+62     	; 0x3e8 <hr_day_increment+0x56>
+	{
+		content_timer = HOUR_DISPLAY_START;
+ 3aa:	10 92 6f 00 	sts	0x006F, r1
+		time.hr++;
+ 3ae:	80 91 82 00 	lds	r24, 0x0082
+ 3b2:	8f 5f       	subi	r24, 0xFF	; 255
+ 3b4:	80 93 82 00 	sts	0x0082, r24
+		if(time.hr > 23)
+ 3b8:	88 31       	cpi	r24, 0x18	; 24
+ 3ba:	10 f0       	brcs	.+4      	; 0x3c0 <hr_day_increment+0x2e>
+			time.hr = 0;
+ 3bc:	10 92 82 00 	sts	0x0082, r1
+		time.sec = 0;
+ 3c0:	10 92 84 00 	sts	0x0084, r1
+		display_content_update(CONTENT_HOUR);
+ 3c4:	80 e0       	ldi	r24, 0x00	; 0
+ 3c6:	6a de       	rcall	.-812    	; 0x9c <display_content_update>
+		ds1307_set_hour(time);
+ 3c8:	20 91 82 00 	lds	r18, 0x0082
+ 3cc:	30 91 83 00 	lds	r19, 0x0083
+ 3d0:	40 91 84 00 	lds	r20, 0x0084
+ 3d4:	50 91 85 00 	lds	r21, 0x0085
+ 3d8:	60 91 86 00 	lds	r22, 0x0086
+ 3dc:	70 91 87 00 	lds	r23, 0x0087
+ 3e0:	80 91 88 00 	lds	r24, 0x0088
+ 3e4:	7f d3       	rcall	.+1790   	; 0xae4 <ds1307_set_hour>
+ 3e6:	18 c0       	rjmp	.+48     	; 0x418 <hr_day_increment+0x86>
+	}
+	else if(content_timer > HOUR_DISPLAY_END && content_timer < DATE_DISPLAY_END)
+ 3e8:	86 51       	subi	r24, 0x16	; 22
+ 3ea:	89 30       	cpi	r24, 0x09	; 9
+ 3ec:	a8 f4       	brcc	.+42     	; 0x418 <hr_day_increment+0x86>
+	{
+		content_timer = DATE_DISPLAY_START;
+ 3ee:	86 e1       	ldi	r24, 0x16	; 22
+ 3f0:	80 93 6f 00 	sts	0x006F, r24
+		time.day++;
+ 3f4:	90 91 86 00 	lds	r25, 0x0086
+ 3f8:	9f 5f       	subi	r25, 0xFF	; 255
+ 3fa:	90 93 86 00 	sts	0x0086, r25
+		if(time.day > mths[time.mth - 1])
+ 3fe:	e0 91 87 00 	lds	r30, 0x0087
+ 402:	f0 e0       	ldi	r31, 0x00	; 0
+ 404:	e1 5a       	subi	r30, 0xA1	; 161
+ 406:	ff 4f       	sbci	r31, 0xFF	; 255
+ 408:	80 81       	ld	r24, Z
+ 40a:	89 17       	cp	r24, r25
+ 40c:	18 f4       	brcc	.+6      	; 0x414 <hr_day_increment+0x82>
+			time.day = 1;
+ 40e:	81 e0       	ldi	r24, 0x01	; 1
+ 410:	80 93 86 00 	sts	0x0086, r24
+		display_content_update(CONTENT_DATE);
+ 414:	81 e0       	ldi	r24, 0x01	; 1
+ 416:	42 de       	rcall	.-892    	; 0x9c <display_content_update>
+	}
+	ds1307_set_date(time);
+ 418:	20 91 82 00 	lds	r18, 0x0082
+ 41c:	30 91 83 00 	lds	r19, 0x0083
+ 420:	40 91 84 00 	lds	r20, 0x0084
+ 424:	50 91 85 00 	lds	r21, 0x0085
+ 428:	60 91 86 00 	lds	r22, 0x0086
+ 42c:	70 91 87 00 	lds	r23, 0x0087
+ 430:	80 91 88 00 	lds	r24, 0x0088
+ 434:	1f d3       	rcall	.+1598   	; 0xa74 <ds1307_set_date>
+}
+ 436:	08 95       	ret
+
+00000438 <rtc_data_check_read>:
+	INT_PORT |= INT_PIN; //Turn on internal pullup
+	MCUCR |= (1<<ISC00); //Both edges because of the colon purpose - only rising or falling would be sufficient otherwise
+	GICR |= (1<<INT0); //Enable INT0 interrupt
+}
+BOOL rtc_data_check_read(void)
+{
+ 438:	1f 93       	push	r17
+ 43a:	df 93       	push	r29
+ 43c:	cf 93       	push	r28
+ 43e:	cd b7       	in	r28, 0x3d	; 61
+ 440:	de b7       	in	r29, 0x3e	; 62
+ 442:	27 97       	sbiw	r28, 0x07	; 7
+ 444:	0f b6       	in	r0, 0x3f	; 63
+ 446:	f8 94       	cli
+ 448:	de bf       	out	0x3e, r29	; 62
+ 44a:	0f be       	out	0x3f, r0	; 63
+ 44c:	cd bf       	out	0x3d, r28	; 61
+	if(!(ds1307_read_reg(DS1307_DATA_OK_REG) == DS1307_DATA_OK)) //Data are not consistent, probably battery discharged
+ 44e:	88 e0       	ldi	r24, 0x08	; 8
+ 450:	8a d3       	rcall	.+1812   	; 0xb66 <ds1307_read_reg>
+ 452:	8a 3a       	cpi	r24, 0xAA	; 170
+ 454:	91 f1       	breq	.+100    	; 0x4ba <__stack+0x5b>
+	{
+		//Write proper value to consistency check register, so that the error doesn't appear next time if the battery has been replaced
+		ds1307_write_reg(DS1307_DATA_OK, DS1307_DATA_OK_REG);
+ 456:	8a ea       	ldi	r24, 0xAA	; 170
+ 458:	68 e0       	ldi	r22, 0x08	; 8
+ 45a:	76 d3       	rcall	.+1772   	; 0xb48 <ds1307_write_reg>
+		//Turn on generating interrupts every second, as without it clock won't work
+		ds1307_write_reg(0x10, DS1307_CTRL_REG);
+ 45c:	80 e1       	ldi	r24, 0x10	; 16
+ 45e:	67 e0       	ldi	r22, 0x07	; 7
+ 460:	73 d3       	rcall	.+1766   	; 0xb48 <ds1307_write_reg>
+		selected_mode = MODE_HOUR_DATE_TEMP; //Set default mode
+ 462:	11 e0       	ldi	r17, 0x01	; 1
+ 464:	10 93 77 00 	sts	0x0077, r17
+		ds1307_write_reg(MODE_HOUR_DATE_TEMP, DS1307_MODE_REG); //And save it in proper register
+ 468:	81 e0       	ldi	r24, 0x01	; 1
+ 46a:	69 e0       	ldi	r22, 0x09	; 9
+ 46c:	6d d3       	rcall	.+1754   	; 0xb48 <ds1307_write_reg>
+		time.hr = 0;
+ 46e:	10 92 82 00 	sts	0x0082, r1
+		time.min = 0;
+ 472:	10 92 83 00 	sts	0x0083, r1
+		time.sec = 0;
+ 476:	10 92 84 00 	sts	0x0084, r1
+		time.day = 1;
+ 47a:	10 93 86 00 	sts	0x0086, r17
+		time.mth = 1;
+ 47e:	10 93 87 00 	sts	0x0087, r17
+		time.yr = 18;
+ 482:	82 e1       	ldi	r24, 0x12	; 18
+ 484:	80 93 88 00 	sts	0x0088, r24
+		ds1307_set_hour(time); //Set default correct time and start oscillator (0 written to sec register starts it)
+ 488:	20 e0       	ldi	r18, 0x00	; 0
+ 48a:	30 e0       	ldi	r19, 0x00	; 0
+ 48c:	40 e0       	ldi	r20, 0x00	; 0
+ 48e:	50 91 85 00 	lds	r21, 0x0085
+ 492:	61 e0       	ldi	r22, 0x01	; 1
+ 494:	71 e0       	ldi	r23, 0x01	; 1
+ 496:	26 d3       	rcall	.+1612   	; 0xae4 <ds1307_set_hour>
+		ds1307_set_date(time);
+ 498:	20 91 82 00 	lds	r18, 0x0082
+ 49c:	30 91 83 00 	lds	r19, 0x0083
+ 4a0:	40 91 84 00 	lds	r20, 0x0084
+ 4a4:	50 91 85 00 	lds	r21, 0x0085
+ 4a8:	60 91 86 00 	lds	r22, 0x0086
+ 4ac:	70 91 87 00 	lds	r23, 0x0087
+ 4b0:	80 91 88 00 	lds	r24, 0x0088
+ 4b4:	df d2       	rcall	.+1470   	; 0xa74 <ds1307_set_date>
+ 4b6:	81 e0       	ldi	r24, 0x01	; 1
+ 4b8:	15 c0       	rjmp	.+42     	; 0x4e4 <__stack+0x85>
+		return TRUE; //Report failure
+	}
+	else //If data seem to be consistent
+	{
+		selected_mode = ds1307_read_reg(DS1307_MODE_REG); //Retrieve them from RTC
+ 4ba:	89 e0       	ldi	r24, 0x09	; 9
+ 4bc:	54 d3       	rcall	.+1704   	; 0xb66 <ds1307_read_reg>
+ 4be:	80 93 77 00 	sts	0x0077, r24
+		time = ds1307_get_time();
+ 4c2:	58 d2       	rcall	.+1200   	; 0x974 <ds1307_get_time>
+ 4c4:	29 83       	std	Y+1, r18	; 0x01
+ 4c6:	3a 83       	std	Y+2, r19	; 0x02
+ 4c8:	4b 83       	std	Y+3, r20	; 0x03
+ 4ca:	5c 83       	std	Y+4, r21	; 0x04
+ 4cc:	6d 83       	std	Y+5, r22	; 0x05
+ 4ce:	7e 83       	std	Y+6, r23	; 0x06
+ 4d0:	8f 83       	std	Y+7, r24	; 0x07
+ 4d2:	a2 e8       	ldi	r26, 0x82	; 130
+ 4d4:	b0 e0       	ldi	r27, 0x00	; 0
+ 4d6:	fe 01       	movw	r30, r28
+ 4d8:	31 96       	adiw	r30, 0x01	; 1
+ 4da:	87 e0       	ldi	r24, 0x07	; 7
+ 4dc:	01 90       	ld	r0, Z+
+ 4de:	0d 92       	st	X+, r0
+ 4e0:	81 50       	subi	r24, 0x01	; 1
+ 4e2:	e1 f7       	brne	.-8      	; 0x4dc <__stack+0x7d>
+		return FALSE; //Report success
+	}
+}
+ 4e4:	27 96       	adiw	r28, 0x07	; 7
+ 4e6:	0f b6       	in	r0, 0x3f	; 63
+ 4e8:	f8 94       	cli
+ 4ea:	de bf       	out	0x3e, r29	; 62
+ 4ec:	0f be       	out	0x3f, r0	; 63
+ 4ee:	cd bf       	out	0x3d, r28	; 61
+ 4f0:	cf 91       	pop	r28
+ 4f2:	df 91       	pop	r29
+ 4f4:	1f 91       	pop	r17
+ 4f6:	08 95       	ret
+
+000004f8 <main>:
+	mode->repeat_delay_ms = 500;
+	mode->hold_delay_ms = 1000;
+}
+
+void main(void)
+{
+ 4f8:	4f 92       	push	r4
+ 4fa:	5f 92       	push	r5
+ 4fc:	6f 92       	push	r6
+ 4fe:	7f 92       	push	r7
+ 500:	8f 92       	push	r8
+ 502:	9f 92       	push	r9
+ 504:	af 92       	push	r10
+ 506:	bf 92       	push	r11
+ 508:	cf 92       	push	r12
+ 50a:	df 92       	push	r13
+ 50c:	ef 92       	push	r14
+ 50e:	ff 92       	push	r15
+ 510:	0f 93       	push	r16
+ 512:	1f 93       	push	r17
+ 514:	df 93       	push	r29
+ 516:	cf 93       	push	r28
+ 518:	cd b7       	in	r28, 0x3d	; 61
+ 51a:	de b7       	in	r29, 0x3e	; 62
+ 51c:	a8 97       	sbiw	r28, 0x28	; 40
+ 51e:	0f b6       	in	r0, 0x3f	; 63
+ 520:	f8 94       	cli
+ 522:	de bf       	out	0x3e, r29	; 62
+ 524:	0f be       	out	0x3f, r0	; 63
+ 526:	cd bf       	out	0x3d, r28	; 61
+	uint8_t ambient_light, desired_voltage;
+	BOOL booster_error;
+	BOOL display_on = FALSE;
+	button_t hr_day_button, min_month_button, mode_button;
+	wdt_enable(WDTO_250MS); //enable watchdog for 250ms
+ 528:	2c e0       	ldi	r18, 0x0C	; 12
+ 52a:	88 e1       	ldi	r24, 0x18	; 24
+ 52c:	90 e0       	ldi	r25, 0x00	; 0
+ 52e:	0f b6       	in	r0, 0x3f	; 63
+ 530:	f8 94       	cli
+ 532:	a8 95       	wdr
+ 534:	81 bd       	out	0x21, r24	; 33
+ 536:	0f be       	out	0x3f, r0	; 63
+ 538:	21 bd       	out	0x21, r18	; 33
+	booster_start();
+ 53a:	63 d1       	rcall	.+710    	; 0x802 <booster_start>
+	nixie_init();
+ 53c:	90 d3       	rcall	.+1824   	; 0xc5e <nixie_init>
+	photoresistor_init();
+ 53e:	0b d4       	rcall	.+2070   	; 0xd56 <photoresistor_init>
+	i2c_init();
+ 540:	4e d3       	rcall	.+1692   	; 0xbde <i2c_init>
+	rtc_interrupt_init();
+ 542:	38 de       	rcall	.-912    	; 0x1b4 <rtc_interrupt_init>
+	buttons_init();
+ 544:	a5 d1       	rcall	.+842    	; 0x890 <buttons_init>
+	buttons_assign(&hr_day_button, &min_month_button, &mode_button);
+ 546:	ce 01       	movw	r24, r28
+ 548:	01 96       	adiw	r24, 0x01	; 1
+ 54a:	be 01       	movw	r22, r28
+ 54c:	64 5f       	subi	r22, 0xF4	; 244
+ 54e:	7f 4f       	sbci	r23, 0xFF	; 255
+ 550:	ae 01       	movw	r20, r28
+ 552:	49 5e       	subi	r20, 0xE9	; 233
+ 554:	5f 4f       	sbci	r21, 0xFF	; 255
+ 556:	48 de       	rcall	.-880    	; 0x1e8 <buttons_assign>
+	rtc_inconsistence = rtc_data_check_read();
+ 558:	6f df       	rcall	.-290    	; 0x438 <rtc_data_check_read>
+ 55a:	80 93 70 00 	sts	0x0070, r24
+	display_content_update(CONTENT_HOUR);
+ 55e:	80 e0       	ldi	r24, 0x00	; 0
+ 560:	9d dd       	rcall	.-1222   	; 0x9c <display_content_update>
+	sei();
+ 562:	78 94       	sei
+	}
+}
+
+void timer_start(void)
+{
+	TCNT0 = TCNT0_LOAD_VALUE;
+ 564:	83 e8       	ldi	r24, 0x83	; 131
+ 566:	82 bf       	out	0x32, r24	; 50
+	TCCR0 = (1<<CS01) | (1<<CS00);
+ 568:	83 e0       	ldi	r24, 0x03	; 3
+ 56a:	83 bf       	out	0x33, r24	; 51
+	TIMSK |= (1<<TOIE0);
+ 56c:	89 b7       	in	r24, 0x39	; 57
+ 56e:	81 60       	ori	r24, 0x01	; 1
+ 570:	89 bf       	out	0x39, r24	; 57
+ 572:	10 e0       	ldi	r17, 0x00	; 0
+			ambient_light = photoresistor_get_value();
+			desired_voltage = ambientlight2voltage(ambient_light);
+			booster_error = booster_control(desired_voltage);
+			if(booster_error)
+			{
+				wdt_disable();
+ 574:	58 e1       	ldi	r21, 0x18	; 24
+ 576:	45 2e       	mov	r4, r21
+				else
+				{
+					display_content_update(CONTENT_CLEAR);
+					display_on = TRUE;
+				}
+				auxiliary_timer = BLINK_DELAY;
+ 578:	4a ef       	ldi	r20, 0xFA	; 250
+ 57a:	64 2e       	mov	r6, r20
+ 57c:	71 2c       	mov	r7, r1
+					display_content_update(CONTENT_ERROR);
+					display_on = FALSE;
+				}
+				else
+				{
+					display_content_update(CONTENT_CLEAR);
+ 57e:	01 e0       	ldi	r16, 0x01	; 1
+					display_on = TRUE;
+				}
+				auxiliary_timer = BLINK_DELAY;
+			}
+		}
+		button_check(&hr_day_button);
+ 580:	4e 01       	movw	r8, r28
+ 582:	08 94       	sec
+ 584:	81 1c       	adc	r8, r1
+ 586:	91 1c       	adc	r9, r1
+		button_check(&min_month_button);
+ 588:	3c e0       	ldi	r19, 0x0C	; 12
+ 58a:	a3 2e       	mov	r10, r19
+ 58c:	b1 2c       	mov	r11, r1
+ 58e:	ac 0e       	add	r10, r28
+ 590:	bd 1e       	adc	r11, r29
+		button_check(&mode_button);
+ 592:	27 e1       	ldi	r18, 0x17	; 23
+ 594:	c2 2e       	mov	r12, r18
+ 596:	d1 2c       	mov	r13, r1
+ 598:	cc 0e       	add	r12, r28
+ 59a:	dd 1e       	adc	r13, r29
+		if(update_time && !auxiliary_timer && !rtc_inconsistence)
+		{
+			update_time = FALSE;
+			time = ds1307_get_time();
+ 59c:	92 e2       	ldi	r25, 0x22	; 34
+ 59e:	e9 2e       	mov	r14, r25
+ 5a0:	f1 2c       	mov	r15, r1
+ 5a2:	ec 0e       	add	r14, r28
+ 5a4:	fd 1e       	adc	r15, r29
+					content_timer = HOUR_DISPLAY_START;
+			}
+			else if(selected_mode == MODE_HOUR_TEMP)
+			{
+				if(content_timer == DATE_DISPLAY_START)
+					content_timer = TEMP_DISPLAY_START;
+ 5a6:	80 e2       	ldi	r24, 0x20	; 32
+ 5a8:	58 2e       	mov	r5, r24
+	display_content_update(CONTENT_HOUR);
+	sei();
+	timer_start();
+	while(1)
+	{
+		if(check_booster)
+ 5aa:	80 91 71 00 	lds	r24, 0x0071
+ 5ae:	88 23       	and	r24, r24
+ 5b0:	79 f0       	breq	.+30     	; 0x5d0 <main+0xd8>
+		{
+			wdt_reset(); //normally this should be called every 80ms, if it wasn't for 250ms - CPU has halted and watchdog will restart it
+ 5b2:	a8 95       	wdr
+			check_booster = FALSE;
+ 5b4:	10 92 71 00 	sts	0x0071, r1
+			ambient_light = photoresistor_get_value();
+ 5b8:	d6 d3       	rcall	.+1964   	; 0xd66 <photoresistor_get_value>
+			desired_voltage = ambientlight2voltage(ambient_light);
+ 5ba:	05 de       	rcall	.-1014   	; 0x1c6 <ambientlight2voltage>
+			booster_error = booster_control(desired_voltage);
+ 5bc:	90 e0       	ldi	r25, 0x00	; 0
+ 5be:	45 d1       	rcall	.+650    	; 0x84a <booster_control>
+			if(booster_error)
+ 5c0:	88 23       	and	r24, r24
+ 5c2:	31 f0       	breq	.+12     	; 0x5d0 <main+0xd8>
+			{
+				wdt_disable();
+ 5c4:	0f b6       	in	r0, 0x3f	; 63
+ 5c6:	f8 94       	cli
+ 5c8:	41 bc       	out	0x21, r4	; 33
+ 5ca:	11 bc       	out	0x21, r1	; 33
+ 5cc:	0f be       	out	0x3f, r0	; 63
+	TCCR0 = (1<<CS01) | (1<<CS00);
+	TIMSK |= (1<<TOIE0);
+}
+void timer_stop(void)
+{
+	TCCR0 = 0;
+ 5ce:	13 be       	out	0x33, r1	; 51
+			{
+				wdt_disable();
+				timer_stop();
+			}
+		}
+		if(rtc_inconsistence)
+ 5d0:	80 91 70 00 	lds	r24, 0x0070
+ 5d4:	88 23       	and	r24, r24
+ 5d6:	99 f0       	breq	.+38     	; 0x5fe <main+0x106>
+		{
+			if(!auxiliary_timer) //Blink display
+ 5d8:	80 91 6d 00 	lds	r24, 0x006D
+ 5dc:	90 91 6e 00 	lds	r25, 0x006E
+ 5e0:	89 2b       	or	r24, r25
+ 5e2:	69 f4       	brne	.+26     	; 0x5fe <main+0x106>
+			{
+				if(display_on)
+ 5e4:	11 23       	and	r17, r17
+ 5e6:	21 f0       	breq	.+8      	; 0x5f0 <main+0xf8>
+				{
+					display_content_update(CONTENT_ERROR);
+ 5e8:	84 e0       	ldi	r24, 0x04	; 4
+ 5ea:	58 dd       	rcall	.-1360   	; 0x9c <display_content_update>
+ 5ec:	10 e0       	ldi	r17, 0x00	; 0
+ 5ee:	03 c0       	rjmp	.+6      	; 0x5f6 <main+0xfe>
+					display_on = FALSE;
+				}
+				else
+				{
+					display_content_update(CONTENT_CLEAR);
+ 5f0:	85 e0       	ldi	r24, 0x05	; 5
+ 5f2:	54 dd       	rcall	.-1368   	; 0x9c <display_content_update>
+ 5f4:	11 e0       	ldi	r17, 0x01	; 1
+					display_on = TRUE;
+				}
+				auxiliary_timer = BLINK_DELAY;
+ 5f6:	70 92 6e 00 	sts	0x006E, r7
+ 5fa:	60 92 6d 00 	sts	0x006D, r6
+			}
+		}
+		button_check(&hr_day_button);
+ 5fe:	c4 01       	movw	r24, r8
+ 600:	4e d1       	rcall	.+668    	; 0x89e <button_check>
+		button_check(&min_month_button);
+ 602:	c5 01       	movw	r24, r10
+ 604:	4c d1       	rcall	.+664    	; 0x89e <button_check>
+		button_check(&mode_button);
+ 606:	c6 01       	movw	r24, r12
+ 608:	4a d1       	rcall	.+660    	; 0x89e <button_check>
+		if(update_time && !auxiliary_timer && !rtc_inconsistence)
+ 60a:	80 91 72 00 	lds	r24, 0x0072
+ 60e:	88 23       	and	r24, r24
+ 610:	09 f4       	brne	.+2      	; 0x614 <main+0x11c>
+ 612:	69 c0       	rjmp	.+210    	; 0x6e6 <main+0x1ee>
+ 614:	80 91 6d 00 	lds	r24, 0x006D
+ 618:	90 91 6e 00 	lds	r25, 0x006E
+ 61c:	89 2b       	or	r24, r25
+ 61e:	09 f0       	breq	.+2      	; 0x622 <main+0x12a>
+ 620:	62 c0       	rjmp	.+196    	; 0x6e6 <main+0x1ee>
+ 622:	80 91 70 00 	lds	r24, 0x0070
+ 626:	88 23       	and	r24, r24
+ 628:	09 f0       	breq	.+2      	; 0x62c <main+0x134>
+ 62a:	5d c0       	rjmp	.+186    	; 0x6e6 <main+0x1ee>
+		{
+			update_time = FALSE;
+ 62c:	10 92 72 00 	sts	0x0072, r1
+			time = ds1307_get_time();
+ 630:	a1 d1       	rcall	.+834    	; 0x974 <ds1307_get_time>
+ 632:	2a a3       	std	Y+34, r18	; 0x22
+ 634:	3b a3       	std	Y+35, r19	; 0x23
+ 636:	4c a3       	std	Y+36, r20	; 0x24
+ 638:	5d a3       	std	Y+37, r21	; 0x25
+ 63a:	6e a3       	std	Y+38, r22	; 0x26
+ 63c:	7f a3       	std	Y+39, r23	; 0x27
+ 63e:	88 a7       	std	Y+40, r24	; 0x28
+ 640:	a2 e8       	ldi	r26, 0x82	; 130
+ 642:	b0 e0       	ldi	r27, 0x00	; 0
+ 644:	f7 01       	movw	r30, r14
+ 646:	87 e0       	ldi	r24, 0x07	; 7
+ 648:	01 90       	ld	r0, Z+
+ 64a:	0d 92       	st	X+, r0
+ 64c:	81 50       	subi	r24, 0x01	; 1
+ 64e:	e1 f7       	brne	.-8      	; 0x648 <main+0x150>
+			if(content_timer <= HOUR_DISPLAY_END)
+ 650:	80 91 6f 00 	lds	r24, 0x006F
+ 654:	86 31       	cpi	r24, 0x16	; 22
+ 656:	98 f4       	brcc	.+38     	; 0x67e <main+0x186>
+			{
+				if(content_timer == HOUR_DISPLAY_START && selected_mode != MODE_HOUR)
+ 658:	88 23       	and	r24, r24
+ 65a:	39 f4       	brne	.+14     	; 0x66a <main+0x172>
+ 65c:	80 91 77 00 	lds	r24, 0x0077
+ 660:	84 30       	cpi	r24, 0x04	; 4
+ 662:	19 f0       	breq	.+6      	; 0x66a <main+0x172>
+				{
+					display_content.decimal_point_2 = FALSE;
+ 664:	10 92 7b 00 	sts	0x007B, r1
+					ds18b20_convert_temp();
+ 668:	8f d2       	rcall	.+1310   	; 0xb88 <ds18b20_convert_temp>
+				}
+				display_content.decimal_point_2 = display_content.decimal_point_2 ? FALSE:TRUE;
+ 66a:	90 e0       	ldi	r25, 0x00	; 0
+ 66c:	80 91 7b 00 	lds	r24, 0x007B
+ 670:	88 23       	and	r24, r24
+ 672:	09 f4       	brne	.+2      	; 0x676 <main+0x17e>
+ 674:	91 e0       	ldi	r25, 0x01	; 1
+ 676:	90 93 7b 00 	sts	0x007B, r25
+				display_content_update(CONTENT_HOUR);
+ 67a:	80 e0       	ldi	r24, 0x00	; 0
+ 67c:	10 c0       	rjmp	.+32     	; 0x69e <main+0x1a6>
+			}
+			else if(content_timer == DATE_DISPLAY_START)
+ 67e:	86 31       	cpi	r24, 0x16	; 22
+ 680:	21 f4       	brne	.+8      	; 0x68a <main+0x192>
+			{
+				display_content.decimal_point_2 = TRUE;
+ 682:	00 93 7b 00 	sts	0x007B, r16
+				display_content_update(CONTENT_DATE);
+ 686:	81 e0       	ldi	r24, 0x01	; 1
+ 688:	0a c0       	rjmp	.+20     	; 0x69e <main+0x1a6>
+			}
+			else if(content_timer == TEMP_DISPLAY_START)
+ 68a:	80 32       	cpi	r24, 0x20	; 32
+ 68c:	49 f4       	brne	.+18     	; 0x6a0 <main+0x1a8>
+			{
+				temperature = ds18b20_get_temp();
+ 68e:	82 d2       	rcall	.+1284   	; 0xb94 <ds18b20_get_temp>
+ 690:	90 93 81 00 	sts	0x0081, r25
+ 694:	80 93 80 00 	sts	0x0080, r24
+				display_content.decimal_point_2 = TRUE;
+ 698:	00 93 7b 00 	sts	0x007B, r16
+				display_content_update(CONTENT_TEMP);
+ 69c:	82 e0       	ldi	r24, 0x02	; 2
+ 69e:	fe dc       	rcall	.-1540   	; 0x9c <display_content_update>
+			}
+
+			if(selected_mode != MODE_HOUR)
+ 6a0:	90 91 77 00 	lds	r25, 0x0077
+ 6a4:	94 30       	cpi	r25, 0x04	; 4
+ 6a6:	09 f4       	brne	.+2      	; 0x6aa <main+0x1b2>
+ 6a8:	80 cf       	rjmp	.-256    	; 0x5aa <main+0xb2>
+			{
+				content_timer++;
+ 6aa:	80 91 6f 00 	lds	r24, 0x006F
+ 6ae:	8f 5f       	subi	r24, 0xFF	; 255
+ 6b0:	80 93 6f 00 	sts	0x006F, r24
+				if(content_timer >= TEMP_DISPLAY_END)
+ 6b4:	8a 32       	cpi	r24, 0x2A	; 42
+ 6b6:	10 f0       	brcs	.+4      	; 0x6bc <main+0x1c4>
+					content_timer = HOUR_DISPLAY_START;
+ 6b8:	10 92 6f 00 	sts	0x006F, r1
+			}
+			if(selected_mode == MODE_HOUR_DATE)
+ 6bc:	92 30       	cpi	r25, 0x02	; 2
+ 6be:	41 f4       	brne	.+16     	; 0x6d0 <main+0x1d8>
+			{
+				if(content_timer == TEMP_DISPLAY_START)
+ 6c0:	80 91 6f 00 	lds	r24, 0x006F
+ 6c4:	80 32       	cpi	r24, 0x20	; 32
+ 6c6:	09 f0       	breq	.+2      	; 0x6ca <main+0x1d2>
+ 6c8:	70 cf       	rjmp	.-288    	; 0x5aa <main+0xb2>
+					content_timer = HOUR_DISPLAY_START;
+ 6ca:	10 92 6f 00 	sts	0x006F, r1
+ 6ce:	6d cf       	rjmp	.-294    	; 0x5aa <main+0xb2>
+			}
+			else if(selected_mode == MODE_HOUR_TEMP)
+ 6d0:	93 30       	cpi	r25, 0x03	; 3
+ 6d2:	09 f0       	breq	.+2      	; 0x6d6 <main+0x1de>
+ 6d4:	6a cf       	rjmp	.-300    	; 0x5aa <main+0xb2>
+			{
+				if(content_timer == DATE_DISPLAY_START)
+ 6d6:	80 91 6f 00 	lds	r24, 0x006F
+ 6da:	86 31       	cpi	r24, 0x16	; 22
+ 6dc:	09 f0       	breq	.+2      	; 0x6e0 <main+0x1e8>
+ 6de:	65 cf       	rjmp	.-310    	; 0x5aa <main+0xb2>
+					content_timer = TEMP_DISPLAY_START;
+ 6e0:	50 92 6f 00 	sts	0x006F, r5
+ 6e4:	62 cf       	rjmp	.-316    	; 0x5aa <main+0xb2>
+			}
+		}
+		else if(time.min == 59 && time.sec == 59)
+ 6e6:	80 91 83 00 	lds	r24, 0x0083
+ 6ea:	8b 33       	cpi	r24, 0x3B	; 59
+ 6ec:	09 f0       	breq	.+2      	; 0x6f0 <main+0x1f8>
+ 6ee:	5d cf       	rjmp	.-326    	; 0x5aa <main+0xb2>
+ 6f0:	80 91 84 00 	lds	r24, 0x0084
+ 6f4:	8b 33       	cpi	r24, 0x3B	; 59
+ 6f6:	09 f0       	breq	.+2      	; 0x6fa <main+0x202>
+ 6f8:	58 cf       	rjmp	.-336    	; 0x5aa <main+0xb2>
+		{
+			content_timer = 0;
+ 6fa:	10 92 6f 00 	sts	0x006F, r1
+			display_content_update(CONTENT_DEPOISON);
+ 6fe:	83 e0       	ldi	r24, 0x03	; 3
+ 700:	cd dc       	rcall	.-1638   	; 0x9c <display_content_update>
+ 702:	53 cf       	rjmp	.-346    	; 0x5aa <main+0xb2>
+
+00000704 <display_multiplex>:
+	}
+}
+void display_multiplex(void)
+{
+	static uint8_t nixie_counter = 0;
+	switch(nixie_counter++)
+ 704:	80 91 73 00 	lds	r24, 0x0073
+ 708:	8f 5f       	subi	r24, 0xFF	; 255
+ 70a:	80 93 73 00 	sts	0x0073, r24
+ 70e:	81 50       	subi	r24, 0x01	; 1
+ 710:	81 30       	cpi	r24, 0x01	; 1
+ 712:	69 f0       	breq	.+26     	; 0x72e <display_multiplex+0x2a>
+ 714:	81 30       	cpi	r24, 0x01	; 1
+ 716:	28 f0       	brcs	.+10     	; 0x722 <display_multiplex+0x1e>
+ 718:	82 30       	cpi	r24, 0x02	; 2
+ 71a:	79 f0       	breq	.+30     	; 0x73a <display_multiplex+0x36>
+ 71c:	83 30       	cpi	r24, 0x03	; 3
+ 71e:	e1 f4       	brne	.+56     	; 0x758 <display_multiplex+0x54>
+ 720:	13 c0       	rjmp	.+38     	; 0x748 <display_multiplex+0x44>
+	{
+		case 0:
+			nixie_show_value(display_content.digit_1, display_content.decimal_point_1, NIXIE_1);
+ 722:	80 91 78 00 	lds	r24, 0x0078
+ 726:	60 91 79 00 	lds	r22, 0x0079
+ 72a:	41 e0       	ldi	r20, 0x01	; 1
+ 72c:	0b c0       	rjmp	.+22     	; 0x744 <display_multiplex+0x40>
+		break;
+		case 1:
+			nixie_show_value(display_content.digit_2, display_content.decimal_point_2, NIXIE_2);
+ 72e:	80 91 7a 00 	lds	r24, 0x007A
+ 732:	60 91 7b 00 	lds	r22, 0x007B
+ 736:	42 e0       	ldi	r20, 0x02	; 2
+ 738:	05 c0       	rjmp	.+10     	; 0x744 <display_multiplex+0x40>
+		break;
+		case 2:
+			nixie_show_value(display_content.digit_3, display_content.decimal_point_3, NIXIE_3);
+ 73a:	80 91 7c 00 	lds	r24, 0x007C
+ 73e:	60 91 7d 00 	lds	r22, 0x007D
+ 742:	43 e0       	ldi	r20, 0x03	; 3
+ 744:	9b d2       	rcall	.+1334   	; 0xc7c <nixie_show_value>
+ 746:	08 95       	ret
+		break;
+		case 3:
+			nixie_show_value(display_content.digit_4, display_content.decimal_point_4, NIXIE_4);
+ 748:	80 91 7e 00 	lds	r24, 0x007E
+ 74c:	60 91 7f 00 	lds	r22, 0x007F
+ 750:	44 e0       	ldi	r20, 0x04	; 4
+ 752:	94 d2       	rcall	.+1320   	; 0xc7c <nixie_show_value>
+			nixie_counter = 0;
+ 754:	10 92 73 00 	sts	0x0073, r1
+ 758:	08 95       	ret
+
+0000075a <__vector_9>:
+		}
+	}
+}
+
+ISR(TIMER0_OVF_vect) //should be called every 2ms
+{
+ 75a:	1f 92       	push	r1
+ 75c:	0f 92       	push	r0
+ 75e:	0f b6       	in	r0, 0x3f	; 63
+ 760:	0f 92       	push	r0
+ 762:	11 24       	eor	r1, r1
+ 764:	2f 93       	push	r18
+ 766:	3f 93       	push	r19
+ 768:	4f 93       	push	r20
+ 76a:	5f 93       	push	r21
+ 76c:	6f 93       	push	r22
+ 76e:	7f 93       	push	r23
+ 770:	8f 93       	push	r24
+ 772:	9f 93       	push	r25
+ 774:	af 93       	push	r26
+ 776:	bf 93       	push	r27
+ 778:	ef 93       	push	r30
+ 77a:	ff 93       	push	r31
+	main_timer++;
+ 77c:	80 91 6c 00 	lds	r24, 0x006C
+ 780:	8f 5f       	subi	r24, 0xFF	; 255
+ 782:	80 93 6c 00 	sts	0x006C, r24
+	if(main_timer & 1) //If value is odd
+ 786:	80 91 6c 00 	lds	r24, 0x006C
+ 78a:	80 fd       	sbrc	r24, 0
+		display_multiplex(); //not very proud of it...
+ 78c:	bb df       	rcall	.-138    	; 0x704 <display_multiplex>
+	if(main_timer == BOOSTER_CHECK_RATE)
+ 78e:	80 91 6c 00 	lds	r24, 0x006C
+ 792:	84 31       	cpi	r24, 0x14	; 20
+ 794:	29 f4       	brne	.+10     	; 0x7a0 <__vector_9+0x46>
+	{
+		check_booster = TRUE;
+ 796:	81 e0       	ldi	r24, 0x01	; 1
+ 798:	80 93 71 00 	sts	0x0071, r24
+		main_timer = 0;
+ 79c:	10 92 6c 00 	sts	0x006C, r1
+	}
+	if(button_timer)
+ 7a0:	80 91 89 00 	lds	r24, 0x0089
+ 7a4:	90 91 8a 00 	lds	r25, 0x008A
+ 7a8:	89 2b       	or	r24, r25
+ 7aa:	49 f0       	breq	.+18     	; 0x7be <__vector_9+0x64>
+		button_timer--;
+ 7ac:	80 91 89 00 	lds	r24, 0x0089
+ 7b0:	90 91 8a 00 	lds	r25, 0x008A
+ 7b4:	01 97       	sbiw	r24, 0x01	; 1
+ 7b6:	90 93 8a 00 	sts	0x008A, r25
+ 7ba:	80 93 89 00 	sts	0x0089, r24
+	if(auxiliary_timer)
+ 7be:	80 91 6d 00 	lds	r24, 0x006D
+ 7c2:	90 91 6e 00 	lds	r25, 0x006E
+ 7c6:	89 2b       	or	r24, r25
+ 7c8:	49 f0       	breq	.+18     	; 0x7dc <__vector_9+0x82>
+		auxiliary_timer--;
+ 7ca:	80 91 6d 00 	lds	r24, 0x006D
+ 7ce:	90 91 6e 00 	lds	r25, 0x006E
+ 7d2:	01 97       	sbiw	r24, 0x01	; 1
+ 7d4:	90 93 6e 00 	sts	0x006E, r25
+ 7d8:	80 93 6d 00 	sts	0x006D, r24
+	TCNT0 = TCNT0_LOAD_VALUE;
+ 7dc:	83 e8       	ldi	r24, 0x83	; 131
+ 7de:	82 bf       	out	0x32, r24	; 50
+}
+ 7e0:	ff 91       	pop	r31
+ 7e2:	ef 91       	pop	r30
+ 7e4:	bf 91       	pop	r27
+ 7e6:	af 91       	pop	r26
+ 7e8:	9f 91       	pop	r25
+ 7ea:	8f 91       	pop	r24
+ 7ec:	7f 91       	pop	r23
+ 7ee:	6f 91       	pop	r22
+ 7f0:	5f 91       	pop	r21
+ 7f2:	4f 91       	pop	r20
+ 7f4:	3f 91       	pop	r19
+ 7f6:	2f 91       	pop	r18
+ 7f8:	0f 90       	pop	r0
+ 7fa:	0f be       	out	0x3f, r0	; 63
+ 7fc:	0f 90       	pop	r0
+ 7fe:	1f 90       	pop	r1
+ 800:	18 95       	reti
+
+00000802 <booster_start>:
+#define VOLTAGE_EPS 2 //Maximal voltage error
+
+void booster_start(void) //Starts booster at low power
+{
+	//PWM
+	MOSFET_DDR |= MOSFET_PIN; //PWM output as output
+ 802:	bb 9a       	sbi	0x17, 3	; 23
+	MOSFET_PORT |= MOSFET_PIN; //Turn off MOSFET (inverted because of inverting driver)
+ 804:	c3 9a       	sbi	0x18, 3	; 24
+	TCCR2 |= (1<<WGM21) | (1<<WGM20) | (1<<COM21) | (1<<COM20) | (1<<CS20);
+ 806:	85 b5       	in	r24, 0x25	; 37
+ 808:	89 67       	ori	r24, 0x79	; 121
+ 80a:	85 bd       	out	0x25, r24	; 37
+	//Timer 2, Fast PWM, Set OC2 on compare (because of inverting driver), no prescaler -> 15.625kHz PWM
+	OCR2 = 40; //Start at some low value
+ 80c:	88 e2       	ldi	r24, 0x28	; 40
+ 80e:	83 bd       	out	0x23, r24	; 35
+
+	//ADC
+	FEEDBACK_DDR &= ~FEEDBACK_PIN; //Feedback pin as input
+ 810:	a1 98       	cbi	0x14, 1	; 20
+	ADMUX |= (1<<REFS0) | (1<<ADLAR); //Reference from AVCC, left adjust result
+ 812:	87 b1       	in	r24, 0x07	; 7
+ 814:	80 66       	ori	r24, 0x60	; 96
+ 816:	87 b9       	out	0x07, r24	; 7
+	ADCSRA |= (1<<ADEN) | (1<<ADPS2) | (1<<ADPS0); //Turn on ADC, single measurement mode, prescaler 32
+ 818:	86 b1       	in	r24, 0x06	; 6
+ 81a:	85 68       	ori	r24, 0x85	; 133
+ 81c:	86 b9       	out	0x06, r24	; 6
+}
+ 81e:	08 95       	ret
+
+00000820 <booster_stop>:
+void booster_stop(void) //Stops booster
+{
+	OCR2 = 0; //Minimum PWM width
+ 820:	13 bc       	out	0x23, r1	; 35
+	MOSFET_PORT |= MOSFET_PIN; //Turn off MOSFET not to make short circuit
+ 822:	c3 9a       	sbi	0x18, 3	; 24
+}
+ 824:	08 95       	ret
+
+00000826 <booster_get_voltage>:
+uint16_t booster_get_voltage(void) //Measures and returns output booster voltage
+{
+	ADMUX = (ADMUX & ~((1<<MUX3) | (1<<MUX2) | (1<<MUX1))) | (1<<MUX0); //Set ADC multiplexer input to 1
+ 826:	87 b1       	in	r24, 0x07	; 7
+ 828:	80 7f       	andi	r24, 0xF0	; 240
+ 82a:	81 60       	ori	r24, 0x01	; 1
+ 82c:	87 b9       	out	0x07, r24	; 7
+	ADCSRA |= (1<<ADSC); //Start measurement
+ 82e:	36 9a       	sbi	0x06, 6	; 6
+	while(ADCSRA & (1<<ADSC)); //Wait for it to end
+ 830:	36 99       	sbic	0x06, 6	; 6
+ 832:	fe cf       	rjmp	.-4      	; 0x830 <booster_get_voltage+0xa>
+	//Equation for calculating voltage, simplified so that it doesn't use floats or create big values
+	//It should be (((R1+R2)/R2)*VREF/256)*ADCH
+	//R1=680k; R2=10k; VREF=5V; so it's 690*5/2560=~1.35, 4/3=~1.33 is good approximation
+	return ((4*(uint16_t)ADCH)/3);
+ 834:	85 b1       	in	r24, 0x05	; 5
+ 836:	90 e0       	ldi	r25, 0x00	; 0
+ 838:	88 0f       	add	r24, r24
+ 83a:	99 1f       	adc	r25, r25
+ 83c:	88 0f       	add	r24, r24
+ 83e:	99 1f       	adc	r25, r25
+ 840:	63 e0       	ldi	r22, 0x03	; 3
+ 842:	70 e0       	ldi	r23, 0x00	; 0
+ 844:	a4 d2       	rcall	.+1352   	; 0xd8e <__udivmodhi4>
+ 846:	cb 01       	movw	r24, r22
+}
+ 848:	08 95       	ret
+
+0000084a <booster_control>:
+BOOL booster_control(uint16_t desired_v) //Controls booster work, THIS FUNCTION HAS TO BE CALLED EVERY BOOSTER_CHECK_RATE*2ms!!!
+{
+ 84a:	cf 93       	push	r28
+ 84c:	df 93       	push	r29
+ 84e:	ec 01       	movw	r28, r24
+	register uint16_t current_v; //Current output voltage value
+	current_v = booster_get_voltage(); //Get that value
+ 850:	ea df       	rcall	.-44     	; 0x826 <booster_get_voltage>
+ 852:	9c 01       	movw	r18, r24
+	if(current_v < desired_v - VOLTAGE_EPS) //If it's lower than should be
+ 854:	ce 01       	movw	r24, r28
+ 856:	02 97       	sbiw	r24, 0x02	; 2
+ 858:	28 17       	cp	r18, r24
+ 85a:	39 07       	cpc	r19, r25
+ 85c:	38 f4       	brcc	.+14     	; 0x86c <booster_control+0x22>
+	{
+		OCR2++; //Increase PWM
+ 85e:	83 b5       	in	r24, 0x23	; 35
+ 860:	8f 5f       	subi	r24, 0xFF	; 255
+ 862:	83 bd       	out	0x23, r24	; 35
+		if(OCR2 > 240) //If over 94% - something has failed
+ 864:	83 b5       	in	r24, 0x23	; 35
+ 866:	81 3f       	cpi	r24, 0xF1	; 241
+ 868:	78 f0       	brcs	.+30     	; 0x888 <booster_control+0x3e>
+ 86a:	0a c0       	rjmp	.+20     	; 0x880 <booster_control+0x36>
+		{
+			booster_stop(); //Stop booster
+			return BOOSTER_FAIL; //Report failure
+		}
+	}
+	else if(current_v > desired_v + VOLTAGE_EPS) //If it's higher than it should be
+ 86c:	22 96       	adiw	r28, 0x02	; 2
+ 86e:	c2 17       	cp	r28, r18
+ 870:	d3 07       	cpc	r29, r19
+ 872:	50 f4       	brcc	.+20     	; 0x888 <booster_control+0x3e>
+	{
+		OCR2--; //Decrease PWM
+ 874:	83 b5       	in	r24, 0x23	; 35
+ 876:	81 50       	subi	r24, 0x01	; 1
+ 878:	83 bd       	out	0x23, r24	; 35
+		if(OCR2 == 0) //If OCR had to be decreased to zero - something has failed
+ 87a:	83 b5       	in	r24, 0x23	; 35
+ 87c:	88 23       	and	r24, r24
+ 87e:	21 f4       	brne	.+8      	; 0x888 <booster_control+0x3e>
+	ADMUX |= (1<<REFS0) | (1<<ADLAR); //Reference from AVCC, left adjust result
+	ADCSRA |= (1<<ADEN) | (1<<ADPS2) | (1<<ADPS0); //Turn on ADC, single measurement mode, prescaler 32
+}
+void booster_stop(void) //Stops booster
+{
+	OCR2 = 0; //Minimum PWM width
+ 880:	13 bc       	out	0x23, r1	; 35
+	MOSFET_PORT |= MOSFET_PIN; //Turn off MOSFET not to make short circuit
+ 882:	c3 9a       	sbi	0x18, 3	; 24
+ 884:	81 e0       	ldi	r24, 0x01	; 1
+ 886:	01 c0       	rjmp	.+2      	; 0x88a <booster_control+0x40>
+	{
+		OCR2--; //Decrease PWM
+		if(OCR2 == 0) //If OCR had to be decreased to zero - something has failed
+		{
+			booster_stop(); //Stop booster
+			return BOOSTER_FAIL; //Report failure
+ 888:	80 e0       	ldi	r24, 0x00	; 0
+		}
+	}
+	return BOOSTER_OK; //If everything was ok - report proper work
+}
+ 88a:	df 91       	pop	r29
+ 88c:	cf 91       	pop	r28
+ 88e:	08 95       	ret
+
+00000890 <buttons_init>:
+
+volatile uint16_t button_timer; //Program timer used to create delays
+
+void buttons_init(void) //Initializes pins used to connect buttons
+{
+	BUTTON_DDR &= ~(HR_DAY_BUTTON | MIN_MONTH_BUTTON | MODE_BUTTON); //Config pins as inputs
+ 890:	87 b3       	in	r24, 0x17	; 23
+ 892:	88 7f       	andi	r24, 0xF8	; 248
+ 894:	87 bb       	out	0x17, r24	; 23
+	BUTTON_PORT |= (HR_DAY_BUTTON | MIN_MONTH_BUTTON | MODE_BUTTON); //Turn on internal pullups
+ 896:	88 b3       	in	r24, 0x18	; 24
+ 898:	87 60       	ori	r24, 0x07	; 7
+ 89a:	88 bb       	out	0x18, r24	; 24
+}
+ 89c:	08 95       	ret
+
+0000089e <button_check>:
+void button_check(button_t* button) //Checks state of buttons and do proper action
+{
+ 89e:	cf 93       	push	r28
+ 8a0:	df 93       	push	r29
+ 8a2:	ec 01       	movw	r28, r24
+	static uint8_t last_button, button_state; //Local variables used by button state machine
+	BOOL button_pressed;
+
+	if(last_button && last_button != button->button_mask) //Solves problems that may arise because of pressing more than one button at a time
+ 8a4:	90 91 76 00 	lds	r25, 0x0076
+ 8a8:	99 23       	and	r25, r25
+ 8aa:	21 f0       	breq	.+8      	; 0x8b4 <button_check+0x16>
+ 8ac:	8a 81       	ldd	r24, Y+2	; 0x02
+ 8ae:	98 17       	cp	r25, r24
+ 8b0:	09 f0       	breq	.+2      	; 0x8b4 <button_check+0x16>
+ 8b2:	4e c0       	rjmp	.+156    	; 0x950 <button_check+0xb2>
+		return;
+
+	button_pressed = !(*button->button_pin & button->button_mask); //Is the button pressed?
+ 8b4:	e8 81       	ld	r30, Y
+ 8b6:	f9 81       	ldd	r31, Y+1	; 0x01
+ 8b8:	80 81       	ld	r24, Z
+
+	if(button_pressed) //If it is
+ 8ba:	9a 81       	ldd	r25, Y+2	; 0x02
+ 8bc:	89 23       	and	r24, r25
+ 8be:	20 91 75 00 	lds	r18, 0x0075
+ 8c2:	88 23       	and	r24, r24
+ 8c4:	f1 f5       	brne	.+124    	; 0x942 <button_check+0xa4>
+	{
+		if(button_state == IDLE) //And has so far been idle
+ 8c6:	22 23       	and	r18, r18
+ 8c8:	51 f4       	brne	.+20     	; 0x8de <button_check+0x40>
+		{
+			button_state = DEBOUNCE; //Start debouncing action
+ 8ca:	81 e0       	ldi	r24, 0x01	; 1
+ 8cc:	80 93 75 00 	sts	0x0075, r24
+			button_timer = DEBOUNCE_DELAY; //For a defined value of time
+ 8d0:	82 e3       	ldi	r24, 0x32	; 50
+ 8d2:	90 e0       	ldi	r25, 0x00	; 0
+ 8d4:	90 93 8a 00 	sts	0x008A, r25
+ 8d8:	80 93 89 00 	sts	0x0089, r24
+ 8dc:	39 c0       	rjmp	.+114    	; 0x950 <button_check+0xb2>
+		}
+		else if(button_state != IDLE && !button_timer) //If it wasn't in idle state and timer has been decremented to zero
+ 8de:	80 91 89 00 	lds	r24, 0x0089
+ 8e2:	90 91 8a 00 	lds	r25, 0x008A
+ 8e6:	89 2b       	or	r24, r25
+ 8e8:	99 f5       	brne	.+102    	; 0x950 <button_check+0xb2>
+		{
+			if(button_state == DEBOUNCE) //If it was being debounced
+ 8ea:	21 30       	cpi	r18, 0x01	; 1
+ 8ec:	a1 f4       	brne	.+40     	; 0x916 <button_check+0x78>
+			{
+				if(button->click_func) //It's time to perform an action, check whether the function to be called has been specified
+ 8ee:	ef 81       	ldd	r30, Y+7	; 0x07
+ 8f0:	f8 85       	ldd	r31, Y+8	; 0x08
+ 8f2:	30 97       	sbiw	r30, 0x00	; 0
+ 8f4:	09 f0       	breq	.+2      	; 0x8f8 <button_check+0x5a>
+					button->click_func(); //If yes, call it
+ 8f6:	09 95       	icall
+				button_state = CLICKED; //Change state of the button to clicked
+ 8f8:	82 e0       	ldi	r24, 0x02	; 2
+ 8fa:	80 93 75 00 	sts	0x0075, r24
+				//Set timer for specified delay after which another action has to be performed if the button is not released earlier
+				button_timer = (button->hold_delay_ms)/2; //(divided by 2 because of the hardware timer 2ms interval)
+ 8fe:	8d 81       	ldd	r24, Y+5	; 0x05
+ 900:	9e 81       	ldd	r25, Y+6	; 0x06
+ 902:	96 95       	lsr	r25
+ 904:	87 95       	ror	r24
+ 906:	90 93 8a 00 	sts	0x008A, r25
+ 90a:	80 93 89 00 	sts	0x0089, r24
+				last_button = button->button_mask; //Remember what button is being handled now
+ 90e:	8a 81       	ldd	r24, Y+2	; 0x02
+ 910:	80 93 76 00 	sts	0x0076, r24
+ 914:	1d c0       	rjmp	.+58     	; 0x950 <button_check+0xb2>
+			}
+			else if(button_state == CLICKED) //If it has already been clicked
+ 916:	22 30       	cpi	r18, 0x02	; 2
+ 918:	21 f4       	brne	.+8      	; 0x922 <button_check+0x84>
+				button_state = REPEAT; //Change state of the button to repeat
+ 91a:	83 e0       	ldi	r24, 0x03	; 3
+ 91c:	80 93 75 00 	sts	0x0075, r24
+ 920:	17 c0       	rjmp	.+46     	; 0x950 <button_check+0xb2>
+			else if(button_state == REPEAT) //If it is in repeat state
+ 922:	23 30       	cpi	r18, 0x03	; 3
+ 924:	a9 f4       	brne	.+42     	; 0x950 <button_check+0xb2>
+			{
+				button_timer = (button->repeat_delay_ms)/2; //Repeat the action in a specified interval of time (divided by 2 because of the same reason)
+ 926:	8b 81       	ldd	r24, Y+3	; 0x03
+ 928:	9c 81       	ldd	r25, Y+4	; 0x04
+ 92a:	96 95       	lsr	r25
+ 92c:	87 95       	ror	r24
+ 92e:	90 93 8a 00 	sts	0x008A, r25
+ 932:	80 93 89 00 	sts	0x0089, r24
+				if(button->hold_func) //Check whether the function to be called has been specified
+ 936:	e9 85       	ldd	r30, Y+9	; 0x09
+ 938:	fa 85       	ldd	r31, Y+10	; 0x0a
+ 93a:	30 97       	sbiw	r30, 0x00	; 0
+ 93c:	49 f0       	breq	.+18     	; 0x950 <button_check+0xb2>
+					button->hold_func(); //If yes, call it
+ 93e:	09 95       	icall
+ 940:	07 c0       	rjmp	.+14     	; 0x950 <button_check+0xb2>
+			}
+		}
+	}
+	else if(button_state == CLICKED || button_state == REPEAT) //If it isn't pressed and is in clicked or repeat state
+ 942:	22 50       	subi	r18, 0x02	; 2
+ 944:	22 30       	cpi	r18, 0x02	; 2
+ 946:	20 f4       	brcc	.+8      	; 0x950 <button_check+0xb2>
+	{
+		button_state = IDLE; //Change its state to idle
+ 948:	10 92 75 00 	sts	0x0075, r1
+		last_button = 0; //And forget what button was being handled
+ 94c:	10 92 76 00 	sts	0x0076, r1
+	}
+}
+ 950:	df 91       	pop	r29
+ 952:	cf 91       	pop	r28
+ 954:	08 95       	ret
+
+00000956 <dec2bcd>:
+
+#define ACK TRUE
+#define NACK FALSE
+
+inline static uint8_t dec2bcd (uint8_t dec) //Quite self-explanatory, isn't it? Function used only inside ds1307.c
+{
+ 956:	48 2f       	mov	r20, r24
+ 958:	6a e0       	ldi	r22, 0x0A	; 10
+ 95a:	0d d2       	rcall	.+1050   	; 0xd76 <__udivmodqi4>
+ 95c:	28 2f       	mov	r18, r24
+ 95e:	30 e0       	ldi	r19, 0x00	; 0
+ 960:	84 e0       	ldi	r24, 0x04	; 4
+ 962:	22 0f       	add	r18, r18
+ 964:	33 1f       	adc	r19, r19
+ 966:	8a 95       	dec	r24
+ 968:	e1 f7       	brne	.-8      	; 0x962 <dec2bcd+0xc>
+ 96a:	84 2f       	mov	r24, r20
+ 96c:	04 d2       	rcall	.+1032   	; 0xd76 <__udivmodqi4>
+	return ((dec/10*16)+(dec%10));
+}
+ 96e:	89 2f       	mov	r24, r25
+ 970:	82 0f       	add	r24, r18
+ 972:	08 95       	ret
+
+00000974 <ds1307_get_time>:
+	i2c_write_byte(dec2bcd(time.yr));
+	i2c_stop();
+}
+
+ds1307_time_t ds1307_get_time(void) //Retrieves time from DS1307
+{
+ 974:	bf 92       	push	r11
+ 976:	cf 92       	push	r12
+ 978:	df 92       	push	r13
+ 97a:	ef 92       	push	r14
+ 97c:	ff 92       	push	r15
+ 97e:	0f 93       	push	r16
+ 980:	1f 93       	push	r17
+ 982:	df 93       	push	r29
+ 984:	cf 93       	push	r28
+ 986:	cd b7       	in	r28, 0x3d	; 61
+ 988:	de b7       	in	r29, 0x3e	; 62
+ 98a:	27 97       	sbiw	r28, 0x07	; 7
+ 98c:	0f b6       	in	r0, 0x3f	; 63
+ 98e:	f8 94       	cli
+ 990:	de bf       	out	0x3e, r29	; 62
+ 992:	0f be       	out	0x3f, r0	; 63
+ 994:	cd bf       	out	0x3d, r28	; 61
+	ds1307_time_t time;
+	i2c_start();
+ 996:	29 d1       	rcall	.+594    	; 0xbea <i2c_start>
+	i2c_write_byte(DS1307_WR_ADDR);
+ 998:	80 ed       	ldi	r24, 0xD0	; 208
+ 99a:	41 d1       	rcall	.+642    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(DS1307_SECS_REG);
+ 99c:	80 e0       	ldi	r24, 0x00	; 0
+ 99e:	3f d1       	rcall	.+638    	; 0xc1e <i2c_write_byte>
+	i2c_start();
+ 9a0:	24 d1       	rcall	.+584    	; 0xbea <i2c_start>
+	i2c_write_byte(DS1307_RD_ADDR);
+ 9a2:	81 ed       	ldi	r24, 0xD1	; 209
+ 9a4:	3c d1       	rcall	.+632    	; 0xc1e <i2c_write_byte>
+	time.sec = bcd2dec(i2c_read_byte(ACK));
+ 9a6:	81 e0       	ldi	r24, 0x01	; 1
+ 9a8:	48 d1       	rcall	.+656    	; 0xc3a <i2c_read_byte>
+ 9aa:	c8 2e       	mov	r12, r24
+	time.min = bcd2dec(i2c_read_byte(ACK));
+ 9ac:	81 e0       	ldi	r24, 0x01	; 1
+ 9ae:	45 d1       	rcall	.+650    	; 0xc3a <i2c_read_byte>
+ 9b0:	d8 2e       	mov	r13, r24
+	time.hr = bcd2dec(i2c_read_byte(ACK));
+ 9b2:	81 e0       	ldi	r24, 0x01	; 1
+ 9b4:	42 d1       	rcall	.+644    	; 0xc3a <i2c_read_byte>
+ 9b6:	f8 2e       	mov	r15, r24
+	time.wday = bcd2dec(i2c_read_byte(ACK));
+ 9b8:	81 e0       	ldi	r24, 0x01	; 1
+ 9ba:	3f d1       	rcall	.+638    	; 0xc3a <i2c_read_byte>
+ 9bc:	e8 2e       	mov	r14, r24
+	time.day = bcd2dec(i2c_read_byte(ACK));
+ 9be:	81 e0       	ldi	r24, 0x01	; 1
+ 9c0:	3c d1       	rcall	.+632    	; 0xc3a <i2c_read_byte>
+ 9c2:	08 2f       	mov	r16, r24
+	time.mth = bcd2dec(i2c_read_byte(ACK));
+ 9c4:	81 e0       	ldi	r24, 0x01	; 1
+ 9c6:	39 d1       	rcall	.+626    	; 0xc3a <i2c_read_byte>
+ 9c8:	18 2f       	mov	r17, r24
+	time.yr = bcd2dec(i2c_read_byte(NACK));
+ 9ca:	80 e0       	ldi	r24, 0x00	; 0
+ 9cc:	36 d1       	rcall	.+620    	; 0xc3a <i2c_read_byte>
+ 9ce:	b8 2e       	mov	r11, r24
+	i2c_stop();
+ 9d0:	19 d1       	rcall	.+562    	; 0xc04 <i2c_stop>
+	return time;
+ 9d2:	eb 2d       	mov	r30, r11
+ 9d4:	e2 95       	swap	r30
+ 9d6:	ef 70       	andi	r30, 0x0F	; 15
+ 9d8:	2a e0       	ldi	r18, 0x0A	; 10
+ 9da:	e2 9f       	mul	r30, r18
+ 9dc:	f0 01       	movw	r30, r0
+ 9de:	11 24       	eor	r1, r1
+ 9e0:	3f e0       	ldi	r19, 0x0F	; 15
+ 9e2:	b3 22       	and	r11, r19
+ 9e4:	81 2f       	mov	r24, r17
+ 9e6:	82 95       	swap	r24
+ 9e8:	8f 70       	andi	r24, 0x0F	; 15
+ 9ea:	82 9f       	mul	r24, r18
+ 9ec:	c0 01       	movw	r24, r0
+ 9ee:	11 24       	eor	r1, r1
+ 9f0:	1f 70       	andi	r17, 0x0F	; 15
+ 9f2:	18 0f       	add	r17, r24
+ 9f4:	80 2f       	mov	r24, r16
+ 9f6:	82 95       	swap	r24
+ 9f8:	8f 70       	andi	r24, 0x0F	; 15
+ 9fa:	82 9f       	mul	r24, r18
+ 9fc:	c0 01       	movw	r24, r0
+ 9fe:	11 24       	eor	r1, r1
+ a00:	0f 70       	andi	r16, 0x0F	; 15
+ a02:	08 0f       	add	r16, r24
+ a04:	8e 2d       	mov	r24, r14
+ a06:	82 95       	swap	r24
+ a08:	8f 70       	andi	r24, 0x0F	; 15
+ a0a:	82 9f       	mul	r24, r18
+ a0c:	c0 01       	movw	r24, r0
+ a0e:	11 24       	eor	r1, r1
+ a10:	e3 22       	and	r14, r19
+ a12:	e8 0e       	add	r14, r24
+ a14:	8f 2d       	mov	r24, r15
+ a16:	82 95       	swap	r24
+ a18:	8f 70       	andi	r24, 0x0F	; 15
+ a1a:	82 9f       	mul	r24, r18
+ a1c:	c0 01       	movw	r24, r0
+ a1e:	11 24       	eor	r1, r1
+ a20:	f3 22       	and	r15, r19
+ a22:	f8 0e       	add	r15, r24
+ a24:	8d 2d       	mov	r24, r13
+ a26:	82 95       	swap	r24
+ a28:	8f 70       	andi	r24, 0x0F	; 15
+ a2a:	82 9f       	mul	r24, r18
+ a2c:	c0 01       	movw	r24, r0
+ a2e:	11 24       	eor	r1, r1
+ a30:	d3 22       	and	r13, r19
+ a32:	d8 0e       	add	r13, r24
+ a34:	8c 2d       	mov	r24, r12
+ a36:	82 95       	swap	r24
+ a38:	8f 70       	andi	r24, 0x0F	; 15
+ a3a:	82 9f       	mul	r24, r18
+ a3c:	c0 01       	movw	r24, r0
+ a3e:	11 24       	eor	r1, r1
+ a40:	c3 22       	and	r12, r19
+ a42:	c8 0e       	add	r12, r24
+}
+ a44:	2f 2d       	mov	r18, r15
+ a46:	3d 2d       	mov	r19, r13
+ a48:	4c 2d       	mov	r20, r12
+ a4a:	5e 2d       	mov	r21, r14
+ a4c:	b8 01       	movw	r22, r16
+ a4e:	8b 2d       	mov	r24, r11
+ a50:	8e 0f       	add	r24, r30
+ a52:	90 e0       	ldi	r25, 0x00	; 0
+ a54:	27 96       	adiw	r28, 0x07	; 7
+ a56:	0f b6       	in	r0, 0x3f	; 63
+ a58:	f8 94       	cli
+ a5a:	de bf       	out	0x3e, r29	; 62
+ a5c:	0f be       	out	0x3f, r0	; 63
+ a5e:	cd bf       	out	0x3d, r28	; 61
+ a60:	cf 91       	pop	r28
+ a62:	df 91       	pop	r29
+ a64:	1f 91       	pop	r17
+ a66:	0f 91       	pop	r16
+ a68:	ff 90       	pop	r15
+ a6a:	ef 90       	pop	r14
+ a6c:	df 90       	pop	r13
+ a6e:	cf 90       	pop	r12
+ a70:	bf 90       	pop	r11
+ a72:	08 95       	ret
+
+00000a74 <ds1307_set_date>:
+	i2c_write_byte(dec2bcd(time.hr));
+	i2c_stop();
+}
+
+void ds1307_set_date(ds1307_time_t time) //Sets date in DS1307
+{
+ a74:	ef 92       	push	r14
+ a76:	ff 92       	push	r15
+ a78:	0f 93       	push	r16
+ a7a:	1f 93       	push	r17
+ a7c:	df 93       	push	r29
+ a7e:	cf 93       	push	r28
+ a80:	cd b7       	in	r28, 0x3d	; 61
+ a82:	de b7       	in	r29, 0x3e	; 62
+ a84:	27 97       	sbiw	r28, 0x07	; 7
+ a86:	0f b6       	in	r0, 0x3f	; 63
+ a88:	f8 94       	cli
+ a8a:	de bf       	out	0x3e, r29	; 62
+ a8c:	0f be       	out	0x3f, r0	; 63
+ a8e:	cd bf       	out	0x3d, r28	; 61
+ a90:	29 83       	std	Y+1, r18	; 0x01
+ a92:	3a 83       	std	Y+2, r19	; 0x02
+ a94:	4b 83       	std	Y+3, r20	; 0x03
+ a96:	15 2f       	mov	r17, r21
+ a98:	5c 83       	std	Y+4, r21	; 0x04
+ a9a:	06 2f       	mov	r16, r22
+ a9c:	6d 83       	std	Y+5, r22	; 0x05
+ a9e:	f7 2e       	mov	r15, r23
+ aa0:	7e 83       	std	Y+6, r23	; 0x06
+ aa2:	8f 83       	std	Y+7, r24	; 0x07
+ aa4:	e8 2e       	mov	r14, r24
+	i2c_start();
+ aa6:	a1 d0       	rcall	.+322    	; 0xbea <i2c_start>
+	i2c_write_byte(DS1307_WR_ADDR);
+ aa8:	80 ed       	ldi	r24, 0xD0	; 208
+ aaa:	b9 d0       	rcall	.+370    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(DS1307_WDAY_REG);
+ aac:	83 e0       	ldi	r24, 0x03	; 3
+ aae:	b7 d0       	rcall	.+366    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(dec2bcd(time.wday));
+ ab0:	81 2f       	mov	r24, r17
+ ab2:	51 df       	rcall	.-350    	; 0x956 <dec2bcd>
+ ab4:	b4 d0       	rcall	.+360    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(dec2bcd(time.day));
+ ab6:	80 2f       	mov	r24, r16
+ ab8:	4e df       	rcall	.-356    	; 0x956 <dec2bcd>
+ aba:	b1 d0       	rcall	.+354    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(dec2bcd(time.mth));
+ abc:	8f 2d       	mov	r24, r15
+ abe:	4b df       	rcall	.-362    	; 0x956 <dec2bcd>
+ ac0:	ae d0       	rcall	.+348    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(dec2bcd(time.yr));
+ ac2:	8e 2d       	mov	r24, r14
+ ac4:	48 df       	rcall	.-368    	; 0x956 <dec2bcd>
+ ac6:	ab d0       	rcall	.+342    	; 0xc1e <i2c_write_byte>
+	i2c_stop();
+ ac8:	9d d0       	rcall	.+314    	; 0xc04 <i2c_stop>
+}
+ aca:	27 96       	adiw	r28, 0x07	; 7
+ acc:	0f b6       	in	r0, 0x3f	; 63
+ ace:	f8 94       	cli
+ ad0:	de bf       	out	0x3e, r29	; 62
+ ad2:	0f be       	out	0x3f, r0	; 63
+ ad4:	cd bf       	out	0x3d, r28	; 61
+ ad6:	cf 91       	pop	r28
+ ad8:	df 91       	pop	r29
+ ada:	1f 91       	pop	r17
+ adc:	0f 91       	pop	r16
+ ade:	ff 90       	pop	r15
+ ae0:	ef 90       	pop	r14
+ ae2:	08 95       	ret
+
+00000ae4 <ds1307_set_hour>:
+	i2c_write_byte(value);
+	i2c_stop();
+}
+
+void ds1307_set_hour(ds1307_time_t time) //Sets hour in DS1307
+{
+ ae4:	ff 92       	push	r15
+ ae6:	0f 93       	push	r16
+ ae8:	1f 93       	push	r17
+ aea:	df 93       	push	r29
+ aec:	cf 93       	push	r28
+ aee:	cd b7       	in	r28, 0x3d	; 61
+ af0:	de b7       	in	r29, 0x3e	; 62
+ af2:	27 97       	sbiw	r28, 0x07	; 7
+ af4:	0f b6       	in	r0, 0x3f	; 63
+ af6:	f8 94       	cli
+ af8:	de bf       	out	0x3e, r29	; 62
+ afa:	0f be       	out	0x3f, r0	; 63
+ afc:	cd bf       	out	0x3d, r28	; 61
+ afe:	f2 2e       	mov	r15, r18
+ b00:	29 83       	std	Y+1, r18	; 0x01
+ b02:	03 2f       	mov	r16, r19
+ b04:	3a 83       	std	Y+2, r19	; 0x02
+ b06:	14 2f       	mov	r17, r20
+ b08:	4b 83       	std	Y+3, r20	; 0x03
+ b0a:	5c 83       	std	Y+4, r21	; 0x04
+ b0c:	6d 83       	std	Y+5, r22	; 0x05
+ b0e:	7e 83       	std	Y+6, r23	; 0x06
+ b10:	8f 83       	std	Y+7, r24	; 0x07
+	i2c_start();
+ b12:	6b d0       	rcall	.+214    	; 0xbea <i2c_start>
+	i2c_write_byte(DS1307_WR_ADDR);
+ b14:	80 ed       	ldi	r24, 0xD0	; 208
+ b16:	83 d0       	rcall	.+262    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(DS1307_SECS_REG);
+ b18:	80 e0       	ldi	r24, 0x00	; 0
+ b1a:	81 d0       	rcall	.+258    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(dec2bcd(time.sec));
+ b1c:	81 2f       	mov	r24, r17
+ b1e:	1b df       	rcall	.-458    	; 0x956 <dec2bcd>
+ b20:	7e d0       	rcall	.+252    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(dec2bcd(time.min));
+ b22:	80 2f       	mov	r24, r16
+ b24:	18 df       	rcall	.-464    	; 0x956 <dec2bcd>
+ b26:	7b d0       	rcall	.+246    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(dec2bcd(time.hr));
+ b28:	8f 2d       	mov	r24, r15
+ b2a:	15 df       	rcall	.-470    	; 0x956 <dec2bcd>
+ b2c:	78 d0       	rcall	.+240    	; 0xc1e <i2c_write_byte>
+	i2c_stop();
+ b2e:	6a d0       	rcall	.+212    	; 0xc04 <i2c_stop>
+}
+ b30:	27 96       	adiw	r28, 0x07	; 7
+ b32:	0f b6       	in	r0, 0x3f	; 63
+ b34:	f8 94       	cli
+ b36:	de bf       	out	0x3e, r29	; 62
+ b38:	0f be       	out	0x3f, r0	; 63
+ b3a:	cd bf       	out	0x3d, r28	; 61
+ b3c:	cf 91       	pop	r28
+ b3e:	df 91       	pop	r29
+ b40:	1f 91       	pop	r17
+ b42:	0f 91       	pop	r16
+ b44:	ff 90       	pop	r15
+ b46:	08 95       	ret
+
+00000b48 <ds1307_write_reg>:
+	byte = i2c_read_byte(NACK);
+	i2c_stop();
+	return byte;
+}
+void ds1307_write_reg(uint8_t value, uint8_t reg) //Writes chosen DS1307 register
+{
+ b48:	0f 93       	push	r16
+ b4a:	1f 93       	push	r17
+ b4c:	08 2f       	mov	r16, r24
+ b4e:	16 2f       	mov	r17, r22
+	i2c_start();
+ b50:	4c d0       	rcall	.+152    	; 0xbea <i2c_start>
+	i2c_write_byte(DS1307_WR_ADDR);
+ b52:	80 ed       	ldi	r24, 0xD0	; 208
+ b54:	64 d0       	rcall	.+200    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(reg);
+ b56:	81 2f       	mov	r24, r17
+ b58:	62 d0       	rcall	.+196    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(value);
+ b5a:	80 2f       	mov	r24, r16
+ b5c:	60 d0       	rcall	.+192    	; 0xc1e <i2c_write_byte>
+	i2c_stop();
+ b5e:	52 d0       	rcall	.+164    	; 0xc04 <i2c_stop>
+}
+ b60:	1f 91       	pop	r17
+ b62:	0f 91       	pop	r16
+ b64:	08 95       	ret
+
+00000b66 <ds1307_read_reg>:
+{
+	return 10*(bcd>>4)+(bcd&0x0F);
+}
+
+uint8_t ds1307_read_reg(uint8_t reg) //Reads chosen DS1307 register
+{
+ b66:	1f 93       	push	r17
+ b68:	18 2f       	mov	r17, r24
+	uint8_t byte;
+	i2c_start();
+ b6a:	3f d0       	rcall	.+126    	; 0xbea <i2c_start>
+	i2c_write_byte(DS1307_WR_ADDR);
+ b6c:	80 ed       	ldi	r24, 0xD0	; 208
+ b6e:	57 d0       	rcall	.+174    	; 0xc1e <i2c_write_byte>
+	i2c_write_byte(reg);
+ b70:	81 2f       	mov	r24, r17
+ b72:	55 d0       	rcall	.+170    	; 0xc1e <i2c_write_byte>
+	i2c_start();
+ b74:	3a d0       	rcall	.+116    	; 0xbea <i2c_start>
+	i2c_write_byte(DS1307_RD_ADDR);
+ b76:	81 ed       	ldi	r24, 0xD1	; 209
+ b78:	52 d0       	rcall	.+164    	; 0xc1e <i2c_write_byte>
+	byte = i2c_read_byte(NACK);
+ b7a:	80 e0       	ldi	r24, 0x00	; 0
+ b7c:	5e d0       	rcall	.+188    	; 0xc3a <i2c_read_byte>
+ b7e:	18 2f       	mov	r17, r24
+	i2c_stop();
+ b80:	41 d0       	rcall	.+130    	; 0xc04 <i2c_stop>
+	return byte;
+}
+ b82:	81 2f       	mov	r24, r17
+ b84:	1f 91       	pop	r17
+ b86:	08 95       	ret
+
+00000b88 <ds18b20_convert_temp>:
+#define READ_SCRATCHPAD 0xBE
+#define SKIP_ROM 0xCC
+
+void ds18b20_convert_temp(void) //Sends CONVERT_T command
+{
+	ow_reset();
+ b88:	9d d0       	rcall	.+314    	; 0xcc4 <ow_reset>
+	ow_write_byte(SKIP_ROM);
+ b8a:	8c ec       	ldi	r24, 0xCC	; 204
+ b8c:	ae d0       	rcall	.+348    	; 0xcea <ow_write_byte>
+	ow_write_byte(CONVERT_T);
+ b8e:	84 e4       	ldi	r24, 0x44	; 68
+ b90:	ac d0       	rcall	.+344    	; 0xcea <ow_write_byte>
+}
+ b92:	08 95       	ret
+
+00000b94 <ds18b20_get_temp>:
+
+ds18b20_temp_t ds18b20_get_temp(void) //Retrieves scratchpad content and converts it to temperature (clever float-avoiding equations...)
+{
+ b94:	1f 93       	push	r17
+	uint8_t lsb, msb;
+	ds18b20_temp_t temp;
+	ow_reset();
+ b96:	96 d0       	rcall	.+300    	; 0xcc4 <ow_reset>
+	ow_write_byte(SKIP_ROM);
+ b98:	8c ec       	ldi	r24, 0xCC	; 204
+ b9a:	a7 d0       	rcall	.+334    	; 0xcea <ow_write_byte>
+	ow_write_byte(READ_SCRATCHPAD);
+ b9c:	8e eb       	ldi	r24, 0xBE	; 190
+ b9e:	a5 d0       	rcall	.+330    	; 0xcea <ow_write_byte>
+	lsb = ow_read_byte();
+ ba0:	c1 d0       	rcall	.+386    	; 0xd24 <ow_read_byte>
+ ba2:	18 2f       	mov	r17, r24
+	msb = ow_read_byte();
+ ba4:	bf d0       	rcall	.+382    	; 0xd24 <ow_read_byte>
+ ba6:	48 2f       	mov	r20, r24
+	temp.integer = (uint8_t)( ((msb << 4) | (lsb >> 4)) & 0x7F);
+	temp.fraction = (uint8_t)( ((lsb & 0x0F) * 625) / 100);
+	return temp;
+ ba8:	81 2f       	mov	r24, r17
+ baa:	90 e0       	ldi	r25, 0x00	; 0
+ bac:	8f 70       	andi	r24, 0x0F	; 15
+ bae:	90 70       	andi	r25, 0x00	; 0
+ bb0:	21 e7       	ldi	r18, 0x71	; 113
+ bb2:	32 e0       	ldi	r19, 0x02	; 2
+ bb4:	bc 01       	movw	r22, r24
+ bb6:	62 9f       	mul	r22, r18
+ bb8:	c0 01       	movw	r24, r0
+ bba:	63 9f       	mul	r22, r19
+ bbc:	90 0d       	add	r25, r0
+ bbe:	72 9f       	mul	r23, r18
+ bc0:	90 0d       	add	r25, r0
+ bc2:	11 24       	eor	r1, r1
+ bc4:	64 e6       	ldi	r22, 0x64	; 100
+ bc6:	70 e0       	ldi	r23, 0x00	; 0
+ bc8:	f6 d0       	rcall	.+492    	; 0xdb6 <__divmodhi4>
+ bca:	96 2f       	mov	r25, r22
+ bcc:	42 95       	swap	r20
+ bce:	40 7f       	andi	r20, 0xF0	; 240
+ bd0:	12 95       	swap	r17
+ bd2:	1f 70       	andi	r17, 0x0F	; 15
+ bd4:	41 2b       	or	r20, r17
+}
+ bd6:	84 2f       	mov	r24, r20
+ bd8:	8f 77       	andi	r24, 0x7F	; 127
+ bda:	1f 91       	pop	r17
+ bdc:	08 95       	ret
+
+00000bde <i2c_init>:
+
+uint8_t timeout_timer; //variable used to prevent stucking in the infinite loop if the transmission has failed
+
+void i2c_init(void) //Sets SCK speed to 100kHz, equation: SCK = F_CPU/(16 + 2*TWBR*Prescaler)
+{
+	TWBR = 12; //Write value to bitrate register
+ bde:	8c e0       	ldi	r24, 0x0C	; 12
+ be0:	80 b9       	out	0x00, r24	; 0
+	TWSR &= ~((1<<TWPS1) | (1<<TWPS0)); //Set prescaler to 1
+ be2:	81 b1       	in	r24, 0x01	; 1
+ be4:	8c 7f       	andi	r24, 0xFC	; 252
+ be6:	81 b9       	out	0x01, r24	; 1
+}
+ be8:	08 95       	ret
+
+00000bea <i2c_start>:
+void i2c_start(void) //Generates start condition on I2C bus
+{
+     TWCR = (1<<TWINT) | (1<<TWEN) |(1<<TWSTA); //Generate start condition
+ bea:	84 ea       	ldi	r24, 0xA4	; 164
+ bec:	86 bf       	out	0x36, r24	; 54
+     timeout_timer = TIMEOUT_VALUE; //Init timer
+ bee:	8a ef       	ldi	r24, 0xFA	; 250
+ bf0:	80 93 8b 00 	sts	0x008B, r24
+     while (!(TWCR & (1<<TWINT)) && (timeout_timer--)); //Wait for TWI interface to finish (or the time to end)
+ bf4:	06 b6       	in	r0, 0x36	; 54
+ bf6:	07 fc       	sbrc	r0, 7
+ bf8:	02 c0       	rjmp	.+4      	; 0xbfe <i2c_start+0x14>
+ bfa:	81 50       	subi	r24, 0x01	; 1
+ bfc:	d8 f7       	brcc	.-10     	; 0xbf4 <i2c_start+0xa>
+ bfe:	80 93 8b 00 	sts	0x008B, r24
+ c02:	08 95       	ret
+
+00000c04 <i2c_stop>:
+}
+void i2c_stop(void) //Generates stop condition on I2C bus
+{
+    TWCR = (1<<TWINT) | (1<<TWEN) | (1<<TWSTO); //Generate stop condition
+ c04:	84 e9       	ldi	r24, 0x94	; 148
+ c06:	86 bf       	out	0x36, r24	; 54
+    timeout_timer = TIMEOUT_VALUE; //Init timer
+ c08:	8a ef       	ldi	r24, 0xFA	; 250
+ c0a:	80 93 8b 00 	sts	0x008B, r24
+    while (!(TWCR & (1<<TWSTO)) && (timeout_timer--)); //Wait for TWI interface to finish (or the time to end)
+ c0e:	06 b6       	in	r0, 0x36	; 54
+ c10:	04 fc       	sbrc	r0, 4
+ c12:	02 c0       	rjmp	.+4      	; 0xc18 <i2c_stop+0x14>
+ c14:	81 50       	subi	r24, 0x01	; 1
+ c16:	d8 f7       	brcc	.-10     	; 0xc0e <i2c_stop+0xa>
+ c18:	80 93 8b 00 	sts	0x008B, r24
+ c1c:	08 95       	ret
+
+00000c1e <i2c_write_byte>:
+}
+void i2c_write_byte(uint8_t value) //Writes byte to I2C device
+{
+     TWDR = value; //Write byte to be sent to TWDR register
+ c1e:	83 b9       	out	0x03, r24	; 3
+     TWCR = (1<<TWINT) | (1<<TWEN); //Start transmission
+ c20:	84 e8       	ldi	r24, 0x84	; 132
+ c22:	86 bf       	out	0x36, r24	; 54
+     timeout_timer = TIMEOUT_VALUE; //Init timer
+ c24:	8a ef       	ldi	r24, 0xFA	; 250
+ c26:	80 93 8b 00 	sts	0x008B, r24
+     while (!(TWCR & (1<<TWINT)) && (timeout_timer--)); //Wait for TWI interface to finish (or the time to end)
+ c2a:	06 b6       	in	r0, 0x36	; 54
+ c2c:	07 fc       	sbrc	r0, 7
+ c2e:	02 c0       	rjmp	.+4      	; 0xc34 <i2c_write_byte+0x16>
+ c30:	81 50       	subi	r24, 0x01	; 1
+ c32:	d8 f7       	brcc	.-10     	; 0xc2a <i2c_write_byte+0xc>
+ c34:	80 93 8b 00 	sts	0x008B, r24
+ c38:	08 95       	ret
+
+00000c3a <i2c_read_byte>:
+}
+uint8_t i2c_read_byte(BOOL ack) //Reads byte from I2C device
+{
+    TWCR = (1<<TWINT) | (ack<<TWEA) | (1<<TWEN); //Read byte from I2C device
+ c3a:	82 95       	swap	r24
+ c3c:	88 0f       	add	r24, r24
+ c3e:	88 0f       	add	r24, r24
+ c40:	80 7c       	andi	r24, 0xC0	; 192
+ c42:	84 68       	ori	r24, 0x84	; 132
+ c44:	86 bf       	out	0x36, r24	; 54
+    timeout_timer = TIMEOUT_VALUE; //Init timer
+ c46:	8a ef       	ldi	r24, 0xFA	; 250
+ c48:	80 93 8b 00 	sts	0x008B, r24
+    while (!(TWCR & (1<<TWINT)) && (timeout_timer--)); //Wait for TWI interface to finish (or the time to end)
+ c4c:	06 b6       	in	r0, 0x36	; 54
+ c4e:	07 fc       	sbrc	r0, 7
+ c50:	02 c0       	rjmp	.+4      	; 0xc56 <i2c_read_byte+0x1c>
+ c52:	81 50       	subi	r24, 0x01	; 1
+ c54:	d8 f7       	brcc	.-10     	; 0xc4c <i2c_read_byte+0x12>
+ c56:	80 93 8b 00 	sts	0x008B, r24
+    return TWDR; //Return read byte
+ c5a:	83 b1       	in	r24, 0x03	; 3
+}
+ c5c:	08 95       	ret
+
+00000c5e <nixie_init>:
+#define COLON_DDR DDRD
+#define COLON_PIN (1<<PD3)
+
+void nixie_init(void) //Initializes ports used by NIXIE
+{
+	ANODE_PORT &= ~(ANODE_1 | ANODE_2 | ANODE_3 | ANODE_4); //Turn off all anodes
+ c5e:	88 b3       	in	r24, 0x18	; 24
+ c60:	8f 70       	andi	r24, 0x0F	; 15
+ c62:	88 bb       	out	0x18, r24	; 24
+	CATHODE_PORT &= ~(CATHODE_BCD_A | CATHODE_BCD_B | CATHODE_BCD_C | CATHODE_BCD_D); //Turn off all cathodes
+ c64:	82 b3       	in	r24, 0x12	; 18
+ c66:	8f 70       	andi	r24, 0x0F	; 15
+ c68:	82 bb       	out	0x12, r24	; 18
+	COLON_PORT &= ~COLON_PIN; //Turn off colon
+ c6a:	93 98       	cbi	0x12, 3	; 18
+	ANODE_DDR |= ANODE_1 | ANODE_2 | ANODE_3 | ANODE_4; //Set anode pins as output
+ c6c:	87 b3       	in	r24, 0x17	; 23
+ c6e:	80 6f       	ori	r24, 0xF0	; 240
+ c70:	87 bb       	out	0x17, r24	; 23
+	CATHODE_DDR |= CATHODE_BCD_A | CATHODE_BCD_B | CATHODE_BCD_C | CATHODE_BCD_D; //Set cathode pins as output
+ c72:	81 b3       	in	r24, 0x11	; 17
+ c74:	80 6f       	ori	r24, 0xF0	; 240
+ c76:	81 bb       	out	0x11, r24	; 17
+	COLON_DDR |= COLON_PIN; //Set colon pin as output
+ c78:	8b 9a       	sbi	0x11, 3	; 17
+}
+ c7a:	08 95       	ret
+
+00000c7c <nixie_show_value>:
+
+void nixie_show_value(uint8_t digit, BOOL decimal_point, uint8_t tube) //Displays digit on chosen NIXIE
+{
+ c7c:	98 2f       	mov	r25, r24
+	ANODE_PORT &= ~(ANODE_1 | ANODE_2 | ANODE_3 | ANODE_4); //Turn off all anodes
+ c7e:	88 b3       	in	r24, 0x18	; 24
+ c80:	8f 70       	andi	r24, 0x0F	; 15
+ c82:	88 bb       	out	0x18, r24	; 24
+	if(digit > 9) //If digit > 9...it's not digit anymore, leave
+ c84:	9a 30       	cpi	r25, 0x0A	; 10
+ c86:	e8 f4       	brcc	.+58     	; 0xcc2 <nixie_show_value+0x46>
+	{
+		return;
+	}
+	CATHODE_PORT = ((CATHODE_PORT & 0x07) | (digit<<4) | (decimal_point<<PD3)); //Mask 3 LSB's shift values to be displayed to proper places
+ c88:	82 b3       	in	r24, 0x12	; 18
+ c8a:	92 95       	swap	r25
+ c8c:	90 7f       	andi	r25, 0xF0	; 240
+ c8e:	87 70       	andi	r24, 0x07	; 7
+ c90:	89 2b       	or	r24, r25
+ c92:	66 0f       	add	r22, r22
+ c94:	66 0f       	add	r22, r22
+ c96:	66 0f       	add	r22, r22
+ c98:	86 2b       	or	r24, r22
+ c9a:	82 bb       	out	0x12, r24	; 18
+	switch(tube) //Turn on chosen tube's anode
+ c9c:	42 30       	cpi	r20, 0x02	; 2
+ c9e:	61 f0       	breq	.+24     	; 0xcb8 <nixie_show_value+0x3c>
+ ca0:	43 30       	cpi	r20, 0x03	; 3
+ ca2:	18 f4       	brcc	.+6      	; 0xcaa <nixie_show_value+0x2e>
+ ca4:	41 30       	cpi	r20, 0x01	; 1
+ ca6:	69 f4       	brne	.+26     	; 0xcc2 <nixie_show_value+0x46>
+ ca8:	05 c0       	rjmp	.+10     	; 0xcb4 <nixie_show_value+0x38>
+ caa:	43 30       	cpi	r20, 0x03	; 3
+ cac:	39 f0       	breq	.+14     	; 0xcbc <nixie_show_value+0x40>
+ cae:	44 30       	cpi	r20, 0x04	; 4
+ cb0:	41 f4       	brne	.+16     	; 0xcc2 <nixie_show_value+0x46>
+ cb2:	06 c0       	rjmp	.+12     	; 0xcc0 <nixie_show_value+0x44>
+	{
+		case 1:
+			ANODE_PORT |= ANODE_1;
+ cb4:	c4 9a       	sbi	0x18, 4	; 24
+ cb6:	08 95       	ret
+		break;
+		case 2:
+			ANODE_PORT |= ANODE_2;
+ cb8:	c5 9a       	sbi	0x18, 5	; 24
+ cba:	08 95       	ret
+		break;
+		case 3:
+			ANODE_PORT |= ANODE_3;
+ cbc:	c6 9a       	sbi	0x18, 6	; 24
+ cbe:	08 95       	ret
+		break;
+		case 4:
+			ANODE_PORT |= ANODE_4;
+ cc0:	c7 9a       	sbi	0x18, 7	; 24
+ cc2:	08 95       	ret
+
+00000cc4 <ow_reset>:
+    return 1;
+}
+
+static __inline__ uint8_t __iCliRetVal(void)
+{
+    cli();
+ cc4:	f8 94       	cli
+BOOL ow_reset(void) //Resets 1wire bus
+{
+	BOOL presence = TRUE;
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
+	{
+		OW_LOW;
+ cc6:	91 98       	cbi	0x12, 1	; 18
+		OW_OUT;
+ cc8:	89 9a       	sbi	0x11, 1	; 17
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+ cca:	80 ee       	ldi	r24, 0xE0	; 224
+ ccc:	91 e0       	ldi	r25, 0x01	; 1
+ cce:	01 97       	sbiw	r24, 0x01	; 1
+ cd0:	f1 f7       	brne	.-4      	; 0xcce <ow_reset+0xa>
+		_delay_us(480);
+		OW_IN;
+ cd2:	89 98       	cbi	0x11, 1	; 17
+    can be achieved.
+*/
+void
+_delay_loop_1(uint8_t __count)
+{
+	__asm__ volatile (
+ cd4:	8d e5       	ldi	r24, 0x5D	; 93
+ cd6:	8a 95       	dec	r24
+ cd8:	f1 f7       	brne	.-4      	; 0xcd6 <ow_reset+0x12>
+		_delay_us(70);
+		presence = (OW_READ & OW_PIN);
+ cda:	80 b3       	in	r24, 0x10	; 16
+    milliseconds can be achieved.
+ */
+void
+_delay_loop_2(uint16_t __count)
+{
+	__asm__ volatile (
+ cdc:	ea e9       	ldi	r30, 0x9A	; 154
+ cde:	f1 e0       	ldi	r31, 0x01	; 1
+ ce0:	31 97       	sbiw	r30, 0x01	; 1
+ ce2:	f1 f7       	brne	.-4      	; 0xce0 <ow_reset+0x1c>
+    return 1;
+}
+
+static __inline__ void __iSeiParam(const uint8_t *__s)
+{
+    sei();
+ ce4:	78 94       	sei
+		_delay_us(410);
+	}
+	return presence;
+}
+ ce6:	82 70       	andi	r24, 0x02	; 2
+ ce8:	08 95       	ret
+
+00000cea <ow_write_byte>:
+    return 1;
+}
+
+static __inline__ uint8_t __iCliRetVal(void)
+{
+    cli();
+ cea:	f8 94       	cli
+ cec:	20 e0       	ldi	r18, 0x00	; 0
+    can be achieved.
+*/
+void
+_delay_loop_1(uint8_t __count)
+{
+	__asm__ volatile (
+ cee:	60 e5       	ldi	r22, 0x50	; 80
+ cf0:	5d e0       	ldi	r21, 0x0D	; 13
+ cf2:	48 e0       	ldi	r20, 0x08	; 8
+ cf4:	35 e5       	ldi	r19, 0x55	; 85
+	uint8_t i;
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
+	{
+		for(i = 0; i < 8; i++)
+		{
+			OW_OUT;
+ cf6:	89 9a       	sbi	0x11, 1	; 17
+			if(value & 0x01)
+ cf8:	80 ff       	sbrs	r24, 0
+ cfa:	06 c0       	rjmp	.+12     	; 0xd08 <ow_write_byte+0x1e>
+ cfc:	94 2f       	mov	r25, r20
+ cfe:	9a 95       	dec	r25
+ d00:	f1 f7       	brne	.-4      	; 0xcfe <ow_write_byte+0x14>
+			{
+				_delay_us(6);
+				OW_IN;
+ d02:	89 98       	cbi	0x11, 1	; 17
+ d04:	93 2f       	mov	r25, r19
+ d06:	05 c0       	rjmp	.+10     	; 0xd12 <ow_write_byte+0x28>
+ d08:	96 2f       	mov	r25, r22
+ d0a:	9a 95       	dec	r25
+ d0c:	f1 f7       	brne	.-4      	; 0xd0a <ow_write_byte+0x20>
+				_delay_us(64);
+			}
+			else
+			{
+				_delay_us(60);
+				OW_IN;
+ d0e:	89 98       	cbi	0x11, 1	; 17
+ d10:	95 2f       	mov	r25, r21
+ d12:	9a 95       	dec	r25
+ d14:	f1 f7       	brne	.-4      	; 0xd12 <ow_write_byte+0x28>
+void ow_write_byte(uint8_t value) //Writes byte to 1wire device
+{
+	uint8_t i;
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
+	{
+		for(i = 0; i < 8; i++)
+ d16:	2f 5f       	subi	r18, 0xFF	; 255
+ d18:	28 30       	cpi	r18, 0x08	; 8
+ d1a:	11 f0       	breq	.+4      	; 0xd20 <ow_write_byte+0x36>
+			{
+				_delay_us(60);
+				OW_IN;
+				_delay_us(10);
+			}
+			value >>= 1;
+ d1c:	86 95       	lsr	r24
+ d1e:	eb cf       	rjmp	.-42     	; 0xcf6 <ow_write_byte+0xc>
+    return 1;
+}
+
+static __inline__ void __iSeiParam(const uint8_t *__s)
+{
+    sei();
+ d20:	78 94       	sei
+		}
+	}
+}
+ d22:	08 95       	ret
+
+00000d24 <ow_read_byte>:
+    return 1;
+}
+
+static __inline__ uint8_t __iCliRetVal(void)
+{
+    cli();
+ d24:	f8 94       	cli
+ d26:	20 e0       	ldi	r18, 0x00	; 0
+ d28:	80 e0       	ldi	r24, 0x00	; 0
+ d2a:	58 e0       	ldi	r21, 0x08	; 8
+ d2c:	4c e0       	ldi	r20, 0x0C	; 12
+ d2e:	39 e4       	ldi	r19, 0x49	; 73
+	uint8_t i, value = 0;
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
+	{
+		for(i = 0; i < 8; i++)
+		{
+			value >>= 1;
+ d30:	86 95       	lsr	r24
+			OW_OUT;
+ d32:	89 9a       	sbi	0x11, 1	; 17
+ d34:	95 2f       	mov	r25, r21
+ d36:	9a 95       	dec	r25
+ d38:	f1 f7       	brne	.-4      	; 0xd36 <ow_read_byte+0x12>
+			_delay_us(6);
+			OW_IN;
+ d3a:	89 98       	cbi	0x11, 1	; 17
+ d3c:	94 2f       	mov	r25, r20
+ d3e:	9a 95       	dec	r25
+ d40:	f1 f7       	brne	.-4      	; 0xd3e <ow_read_byte+0x1a>
+			_delay_us(9);
+			if(OW_READ & OW_PIN)
+ d42:	81 99       	sbic	0x10, 1	; 16
+				value |= 0x80;
+ d44:	80 68       	ori	r24, 0x80	; 128
+ d46:	93 2f       	mov	r25, r19
+ d48:	9a 95       	dec	r25
+ d4a:	f1 f7       	brne	.-4      	; 0xd48 <ow_read_byte+0x24>
+uint8_t ow_read_byte(void) //Reads byte from 1wire device
+{
+	uint8_t i, value = 0;
+	ATOMIC_BLOCK(ATOMIC_FORCEON)
+	{
+		for(i = 0; i < 8; i++)
+ d4c:	2f 5f       	subi	r18, 0xFF	; 255
+ d4e:	28 30       	cpi	r18, 0x08	; 8
+ d50:	79 f7       	brne	.-34     	; 0xd30 <ow_read_byte+0xc>
+    return 1;
+}
+
+static __inline__ void __iSeiParam(const uint8_t *__s)
+{
+    sei();
+ d52:	78 94       	sei
+				value |= 0x80;
+			_delay_us(55);
+		}
+	}
+	return value;
+}
+ d54:	08 95       	ret
+
+00000d56 <photoresistor_init>:
+#define PHOTORESISTOR_PIN (1<<PC0)
+#define PHOTORESISTOR_DDR DDRC
+
+void photoresistor_init(void) //Initializes ADC for ambient light measurements
+{
+	PHOTORESISTOR_DDR &= ~PHOTORESISTOR_PIN; //Photoresistor pin as input
+ d56:	a0 98       	cbi	0x14, 0	; 20
+	ADMUX |= (1<<REFS0) | (1<<ADLAR); //Reference from AVCC, left adjust result
+ d58:	87 b1       	in	r24, 0x07	; 7
+ d5a:	80 66       	ori	r24, 0x60	; 96
+ d5c:	87 b9       	out	0x07, r24	; 7
+	ADCSRA |= (1<<ADEN) | (1<<ADPS2) | (1<<ADPS0); //Turn on ADC, single measurement mode, prescaler 32
+ d5e:	86 b1       	in	r24, 0x06	; 6
+ d60:	85 68       	ori	r24, 0x85	; 133
+ d62:	86 b9       	out	0x06, r24	; 6
+}
+ d64:	08 95       	ret
+
+00000d66 <photoresistor_get_value>:
+
+uint8_t photoresistor_get_value(void) //Performs measurement and returns measured value
+{
+	ADMUX &= ~((1<<MUX3) | (1<<MUX2) | (1<<MUX1) | (1<<MUX0)); //Set ADC multiplexer to input 0
+ d66:	87 b1       	in	r24, 0x07	; 7
+ d68:	80 7f       	andi	r24, 0xF0	; 240
+ d6a:	87 b9       	out	0x07, r24	; 7
+	ADCSRA |= (1<<ADSC); //Start measurement
+ d6c:	36 9a       	sbi	0x06, 6	; 6
+	while(ADCSRA & (1<<ADSC)); //Wait for it to end
+ d6e:	36 99       	sbic	0x06, 6	; 6
+ d70:	fe cf       	rjmp	.-4      	; 0xd6e <photoresistor_get_value+0x8>
+	return ADCH; //Return read value
+ d72:	85 b1       	in	r24, 0x05	; 5
+}
+ d74:	08 95       	ret
+
+00000d76 <__udivmodqi4>:
+ d76:	99 1b       	sub	r25, r25
+ d78:	79 e0       	ldi	r23, 0x09	; 9
+ d7a:	04 c0       	rjmp	.+8      	; 0xd84 <__udivmodqi4_ep>
+
+00000d7c <__udivmodqi4_loop>:
+ d7c:	99 1f       	adc	r25, r25
+ d7e:	96 17       	cp	r25, r22
+ d80:	08 f0       	brcs	.+2      	; 0xd84 <__udivmodqi4_ep>
+ d82:	96 1b       	sub	r25, r22
+
+00000d84 <__udivmodqi4_ep>:
+ d84:	88 1f       	adc	r24, r24
+ d86:	7a 95       	dec	r23
+ d88:	c9 f7       	brne	.-14     	; 0xd7c <__udivmodqi4_loop>
+ d8a:	80 95       	com	r24
+ d8c:	08 95       	ret
+
+00000d8e <__udivmodhi4>:
+ d8e:	aa 1b       	sub	r26, r26
+ d90:	bb 1b       	sub	r27, r27
+ d92:	51 e1       	ldi	r21, 0x11	; 17
+ d94:	07 c0       	rjmp	.+14     	; 0xda4 <__udivmodhi4_ep>
+
+00000d96 <__udivmodhi4_loop>:
+ d96:	aa 1f       	adc	r26, r26
+ d98:	bb 1f       	adc	r27, r27
+ d9a:	a6 17       	cp	r26, r22
+ d9c:	b7 07       	cpc	r27, r23
+ d9e:	10 f0       	brcs	.+4      	; 0xda4 <__udivmodhi4_ep>
+ da0:	a6 1b       	sub	r26, r22
+ da2:	b7 0b       	sbc	r27, r23
+
+00000da4 <__udivmodhi4_ep>:
+ da4:	88 1f       	adc	r24, r24
+ da6:	99 1f       	adc	r25, r25
+ da8:	5a 95       	dec	r21
+ daa:	a9 f7       	brne	.-22     	; 0xd96 <__udivmodhi4_loop>
+ dac:	80 95       	com	r24
+ dae:	90 95       	com	r25
+ db0:	bc 01       	movw	r22, r24
+ db2:	cd 01       	movw	r24, r26
+ db4:	08 95       	ret
+
+00000db6 <__divmodhi4>:
+ db6:	97 fb       	bst	r25, 7
+ db8:	09 2e       	mov	r0, r25
+ dba:	07 26       	eor	r0, r23
+ dbc:	0a d0       	rcall	.+20     	; 0xdd2 <__divmodhi4_neg1>
+ dbe:	77 fd       	sbrc	r23, 7
+ dc0:	04 d0       	rcall	.+8      	; 0xdca <__divmodhi4_neg2>
+ dc2:	e5 df       	rcall	.-54     	; 0xd8e <__udivmodhi4>
+ dc4:	06 d0       	rcall	.+12     	; 0xdd2 <__divmodhi4_neg1>
+ dc6:	00 20       	and	r0, r0
+ dc8:	1a f4       	brpl	.+6      	; 0xdd0 <__divmodhi4_exit>
+
+00000dca <__divmodhi4_neg2>:
+ dca:	70 95       	com	r23
+ dcc:	61 95       	neg	r22
+ dce:	7f 4f       	sbci	r23, 0xFF	; 255
+
+00000dd0 <__divmodhi4_exit>:
+ dd0:	08 95       	ret
+
+00000dd2 <__divmodhi4_neg1>:
+ dd2:	f6 f7       	brtc	.-4      	; 0xdd0 <__divmodhi4_exit>
+ dd4:	90 95       	com	r25
+ dd6:	81 95       	neg	r24
+ dd8:	9f 4f       	sbci	r25, 0xFF	; 255
+ dda:	08 95       	ret
+
+00000ddc <_exit>:
+ ddc:	f8 94       	cli
+
+00000dde <__stop_program>:
+ dde:	ff cf       	rjmp	.-2      	; 0xdde <__stop_program>

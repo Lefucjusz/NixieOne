@@ -1,4 +1,4 @@
-//ATmega8, fuses LO = 0x23, HI = 0xD9
+//ATmega8, fuses LO = 0xA3, HI = 0xD9
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
