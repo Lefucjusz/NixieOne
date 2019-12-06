@@ -9,7 +9,7 @@
 #define FEEDBACK_PORT PORTC
 #define FEEDBACK_DDR DDRC
 
-#define VOLTAGE_EPS 2 //Maximal voltage error
+#define V_MEASUREMENT_CORR 9 //Voltage measurement correction, compensation for elements' value tolerance etc...
 
 void booster_start(void) //Starts booster at low power
 {
@@ -38,42 +38,46 @@ uint16_t booster_get_voltage(void) //Measures and returns output booster voltage
 	//Equation for calculating voltage, simplified so that it doesn't use floats or create big values
 	//It should be (((R1+R2)/R2)*VREF/256)*ADCH
 	//R1=680k; R2=10k; VREF=5V; so it's 690*5/2560=~1.35, 4/3=~1.33 is good approximation
-	return ((4*(uint16_t)ADCH)/3);
+	//If error is too big, it can be compensated with V_MEASUREMENT_CORR value
+	return ((4*(uint16_t)ADCH)/3) + V_MEASUREMENT_CORR;
 }
 
-//RELAY + INTEGRATOR STRATEGY
+#ifndef PI_CONTROLLER //RELAY + INTEGRATOR STRATEGY
 
-//BOOL booster_control(uint16_t desired_v) //Controls booster work, THIS FUNCTION HAS TO BE CALLED EVERY BOOSTER_CHECK_RATE*2ms!!!
-//{
-//	register uint16_t current_v; //Current output voltage value
-//	current_v = booster_get_voltage(); //Get that value
-//	if(current_v < desired_v - VOLTAGE_EPS) //If it's lower than should be
-//	{
-//		OCR2++; //Increase PWM
-//		if(OCR2 > 240) //If over 94% - something has failed
-//		{
-//			booster_stop(); //Stop booster
-//			return BOOSTER_FAIL; //Report failure
-//		}
-//	}
-//	else if(current_v > desired_v + VOLTAGE_EPS) //If it's higher than it should be
-//	{
-//		OCR2--; //Decrease PWM
-//		if(OCR2 == 0) //If OCR had to be decreased to zero - something has failed
-//		{
-//			booster_stop(); //Stop booster
-//			return BOOSTER_FAIL; //Report failure
-//		}
-//	}
-//	return BOOSTER_OK; //If everything was ok - report proper work
-//}
+#define VOLTAGE_EPS 2 //Maximal voltage error, relay dead zone
 
-//PI STRATEGY
+BOOL booster_control(uint16_t desired_v) //Controls booster work, THIS FUNCTION HAS TO BE CALLED EVERY BOOSTER_CHECK_RATE*2ms!!!
+{
+	register uint16_t current_v; //Current output voltage value
+	current_v = booster_get_voltage(); //Get that value
+	if(current_v < desired_v - VOLTAGE_EPS) //If it's lower than should be
+	{
+		OCR2++; //Increase PWM
+		if(OCR2 > 240) //If over 94% - something has failed
+		{
+			booster_stop(); //Stop booster
+			return BOOSTER_FAIL; //Report failure
+		}
+	}
+	else if(current_v > desired_v + VOLTAGE_EPS) //If it's higher than it should be
+	{
+		OCR2--; //Decrease PWM
+		if(OCR2 == 0) //If OCR had to be decreased to zero - something has failed
+		{
+			booster_stop(); //Stop booster
+			return BOOSTER_FAIL; //Report failure
+		}
+	}
+	return BOOSTER_OK; //If everything was ok - report proper work
+}
+#else //PI STRATEGY
 
 #define KP 7 //Proportional gain
-#define KI 13 //Integral gain
-#define FAILURE_TIMEOUT 100 //Number of calls of booster_control function that resulted in setting min or max value of OCR2 register
-#define INTEGRAL_SCALE_FACTOR 1000L //To avoid floats and resolve rounding error problems
+#define KI 15 //Integral gain
+//Max number of calls of booster_control function that resulted in setting min or max value of OCR2 register
+//If error_counter is above that value, turn off the booster, because something must have failed
+#define FAILURE_TIMEOUT 100
+#define INTEGRAL_SCALE_FACTOR 1000L //To avoid floats and resolve integer rounding error problems
 #define OCR2_MAX 255 //Max value of OCR2 register
 
 BOOL booster_control(uint16_t desired_v) //Controls booster work, THIS FUNCTION HAS TO BE CALLED EVERY BOOSTER_CHECK_RATE*2ms!!!
@@ -120,3 +124,4 @@ BOOL booster_control(uint16_t desired_v) //Controls booster work, THIS FUNCTION 
 	OCR2 = output; //Set PWM
 	return BOOSTER_OK; //Report proper work
 }
+#endif

@@ -4,8 +4,14 @@
 #include <stdint.h>
 #include "bool.h"
 
-//#define BOOSTER_CHECK_RATE 20 //*2ms (for relay+integrator)
+#define PI_CONTROLLER //Define control strategy, comment out to use old relay+integrator controller
+
+#ifndef PI_CONTROLLER
+#define BOOSTER_CHECK_RATE 20 //*2ms (for relay+integrator)
+#else
 #define BOOSTER_CHECK_RATE 2 //*2ms (for PI)
+#endif
+
 #define BOOSTER_FAIL TRUE
 #define BOOSTER_OK FALSE
 

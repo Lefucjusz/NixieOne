@@ -333,10 +333,8 @@ void main(void)
 	{
 		if(check_booster)
 		{
-			wdt_reset(); //normally this should be called every 80ms, if it wasn't for 250ms - CPU has halted and watchdog will restart it
+			wdt_reset(); //normally this should be called every 4ms or 40ms, if it wasn't for 250ms - CPU has halted and watchdog will restart it
 			check_booster = FALSE;
-			ambient_light = photoresistor_get_value();
-			desired_voltage = ambientlight2voltage(ambient_light);
 			booster_error = booster_control(desired_voltage);
 			if(booster_error)
 			{
@@ -406,6 +404,8 @@ void main(void)
 				if(content_timer == DATE_DISPLAY_START)
 					content_timer = TEMP_DISPLAY_START;
 			}
+			ambient_light = photoresistor_get_value(); //Check the value of ambient light...
+			desired_voltage = ambientlight2voltage(ambient_light); //...and update display brightness
 		}
 		else if(time.min == 59 && time.sec == 59)
 		{
