@@ -313,7 +313,7 @@ void buttons_assign(button_t* hr_day, button_t* min_month, button_t* mode)
 
 void main(void)
 {
-	uint8_t ambient_light, desired_voltage;
+	uint8_t ambient_light = 0, desired_voltage = M_BRIGHTNESS_V;
 	BOOL booster_error;
 	BOOL display_on = FALSE;
 	button_t hr_day_button, min_month_button, mode_button;
